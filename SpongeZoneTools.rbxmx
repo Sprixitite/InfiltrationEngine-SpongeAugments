@@ -1,7 +1,7 @@
 <roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBX502603FA19CE41E489FDCFF5E74F8B23">
+	<Item class="Folder" referent="RBXC8BFAA3BEF35482DB29AFAFFAE678211">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -10,7 +10,7 @@
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 		</Properties>
-		<Item class="Folder" referent="RBX767674C9E9F048B6A10AD338273D15EA">
+		<Item class="Folder" referent="RBX96907DAF75134C27B897BC2B2FD299FB">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -19,7 +19,7 @@
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBXF861031EF38B469381F5F5AB6EDBC6FC">
+			<Item class="ModuleScript" referent="RBX0940AC9894084C8AA7E6BE4994EC28C7">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -155,7 +155,7 @@ return {
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBX84A953D09E194A7794A8655328F49E41">
+		<Item class="Folder" referent="RBX3711CCCC0F824F9A9BA02A4F45C17D4A">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -164,7 +164,7 @@ return {
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBXDA08DB19A00B44FE8148567F5C09C4C4">
+			<Item class="ModuleScript" referent="RBX5804280FADDC4A5AA89C6C7224E5748E">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -265,7 +265,7 @@ return {
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="Script" referent="RBX7E85B066530445539393535BC72FC175">
+		<Item class="Script" referent="RBX644B7412E086482182EBE7CE1CEC3741">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -278,9 +278,19 @@ return {
 				<ProtectedString name="Source"><![CDATA[local spongeZoneToolbar = plugin:CreateToolbar("SpongeZone Tools")
 
 local allPlugins = {
+	AttributeImporter = script.Parent.AttributeImporter.Main,
 	CellFixup = script.Parent.CellFixup.Main,
-	ToggleGroupVis = script.Parent.ToggleGroupVis.Main
+	ToggleGroupVis = script.Parent.ToggleGroupVis.Main,
 }
+
+local function MakePluginMenu(id, text, iconId)
+	return plugin:CreatePluginMenu(`SpongeZoneTools_InfilEngine_{id}`, text, iconId)
+end
+
+local function MakeAction(id, text, tooltip, iconId, allowBinding)
+	allowBinding = allowBinding ~= nil and allowBinding or true
+	return plugin:CreatePluginAction(`SpongeZoneTools_InfilEngine_{id}`, text, tooltip, iconId, allowBinding)
+end
 
 for k, v in pairs(allPlugins) do
 	print(`Initializing SpongeZone tool {k}...`)
@@ -288,13 +298,16 @@ for k, v in pairs(allPlugins) do
 	local toolDetails = require(v)
 	local toolButton = spongeZoneToolbar:CreateButton(toolDetails.ID, toolDetails.Tooltip, toolDetails.IconAssetID, toolDetails.Text)
 	
+	if toolDetails.BuildMenu ~= nil then
+		toolDetails.BuildMenu(MakePluginMenu, MakeAction)
+	end
 	toolButton.Click:Connect(toolDetails.ClickedCallback)
 end]]></ProtectedString>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
 		</Item>
-		<Item class="Folder" referent="RBX00D8A302E5A543ACB96C6E5BEA9662D4">
+		<Item class="Folder" referent="RBXEC9759FADBE94901945A8F6A232C142B">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -303,7 +316,7 @@ end]]></ProtectedString>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBX2C8CAB62605947F88A58BC73586BAA35">
+			<Item class="ModuleScript" referent="RBX137B450325734C1FB8A7F21F3F7443CB">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -354,21 +367,1738 @@ return {
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXF9F09C8F3E094811985F9F22A81C82D9">
+		</Item>
+		<Item class="Folder" referent="RBX896A7107EDD046EC98BB4516A760A3B7">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">AttributeImporter</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+			<Item class="ModuleScript" referent="RBXDE5BD338D6B2441DB4F6835A8791FD69">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 					<bool name="DefinesCapabilities">false</bool>
 					<Content name="LinkedSource"><null></null></Content>
-					<string name="Name">UI</string>
-					<string name="ScriptGuid">{E91F60D1-D0F8-4574-A4B5-D8BC735E9A8E}</string>
-					<ProtectedString name="Source"><![CDATA[local PropArrayUI = {}
+					<string name="Name">Main</string>
+					<string name="ScriptGuid">{EF17C8F4-4127-4D1F-890C-286169E6F9E2}</string>
+					<ProtectedString name="Source"><![CDATA[local selectionService = game:GetService("Selection")
+local changeHistoryService = game:GetService("ChangeHistoryService")
+
+local attributeType = require(script.Parent.NotMineThisIsSperosPleaseDontSueMe.PropAttributeTypes)
+local globalAttributes = require(script.Parent.NotMineThisIsSperosPleaseDontSueMe.GlobalAttributes)
+local nonGlobalAttributes = require(script.Parent.NotMineThisIsSperosPleaseDontSueMe.AttributesMap)
+local missingAttributes = require(script.Parent.MissingPropsList)
+
+local pluginMenu: PluginMenu? = nil
+
+local attributeTypeDefaults = {
+	[attributeType.NUMBER					] = 0,
+	[attributeType.INT						] = 0,
+	[attributeType.OPTIONAL_INT				] = 0,
+	
+	[attributeType.EXPRESSION				] = "",
+	[attributeType.STATE_VALUE				] = "",
+	[attributeType.STRING					] = "",
+	[attributeType.OPTIONAL_MATERIAL		] = "Neon",
+	
+	[attributeType.NETWORK_ID				] = 0,
+	[attributeType.NETWORK_ID_STRING		] = "",
+	
+	[attributeType.BOOL						] = false,
+	[attributeType.OPTIONAL_BOOL			] = false,
+	
+	[attributeType.OPTIONAL_MISSION_COLOR	] = Color3.new(0,1,0),
+	[attributeType.VECTOR3					] = Vector3.new(),
+	
+	[attributeType.CFRAME					] = CFrame.new(),
+}
+
+local engineClassInfo = {
+	StateComponent = {
+		FolderPath = { "StateComponents" },
+		ValidClasses = { "BoolValue" },
+		TypeIsAttribute = true,
+		ImportsGlobals = false
+	},
+	ConditionalGeometry = {
+		FolderPath = { "ConditionalGeometry" },
+		ValidClasses = { "Model" }
+	},
+	LoudSpawn = {
+		FolderPath = { "LoudSpawns" },
+		ValidClasses = { "BasePart" },
+		TypeIsName = true,
+		ImportsGlobals = false
+	},
+	Prop = {
+		FolderPath = { "Props" },
+		ValidClasses = { "BasePart" },
+		TypeIsName = true
+	},
+	Glass = {
+		FolderPath = { "Glass" },
+		ValidClasses = { "BasePart" }
+	},
+	Link = {
+		FolderPath = { "Cells", "Links" },
+		ValidClasses = { "BasePart" },
+		ImportsGlobals = false
+	},
+	Bot = { 
+		FolderPath = { "Bots" },
+		ValidClasses = { "BoolValue" },
+		ImportsGlobals = false
+	},
+}
+
+local function AttributeValueOrDefault(attrDetails)
+	if attrDetails[2] == nil then
+		return attributeTypeDefaults[attrDetails[1]]
+	else
+		return attrDetails[2]
+	end
+end
+
+local function ApplyAttributeList(to, attrs, deleting)
+	for attrName, attrDetails in pairs(attrs) do
+		if deleting then to:SetAttribute(attrName, nil) continue end
+		if to:GetAttribute(attrName) ~= nil then continue end
+		to:SetAttribute(attrName, AttributeValueOrDefault(attrDetails))
+	end
+end
+
+local function CompareInstanceParent(debugMission, instance, ...)
+	local varargs = {...}
+	local comparing = nil
+	for _, name in pairs({...}) do
+		comparing = (comparing or debugMission):FindFirstChild(name)
+		if comparing == nil then break end
+	end
+	if comparing == nil then return false end
+	return comparing:IsAncestorOf(instance)
+end
+
+local function GetInstanceClass(debugMission, instance)
+	for classArch, info in pairs(engineClassInfo) do
+		if not CompareInstanceParent(debugMission, instance, unpack(info.FolderPath)) then continue end
+		
+		local validTypeMatch = false
+		for _, validType in pairs(info.ValidClasses) do
+			validTypeMatch = instance:IsA(validType)
+			if validTypeMatch then break end
+		end
+		
+		if not validTypeMatch then warn(`Instance {instance.Name} is not a valid {classArch}! Skipping`) return nil, nil end
+		
+		if info.TypeIsName then
+			return instance.Name, classArch
+		elseif info.TypeIsAttribute then
+			return instance:GetAttribute("Type"), classArch 
+		else
+			return classArch, classArch
+		end
+	end
+	
+	warn(`{instance.Parent.Name}.{instance.Name} is of unknown class!`)
+	return instance.Name, nil
+end
+
+local function TableMerge(tblTo, tblFrom, preferExisting)
+	if tblTo == nil or tblFrom == nil then return end
+	for k, v in pairs(tblFrom) do
+		if tblTo[k] == nil then
+			tblTo[k] = v
+			continue
+		end
+		if preferExisting then
+			continue
+		end
+		tblTo[k] = v
+	end
+end
+
+local function BuildAttributeList(className, includePrivate, includeGlobal)
+	local attributeList = {}
+	if includePrivate then
+		TableMerge(attributeList, missingAttributes[className])
+		TableMerge(attributeList, nonGlobalAttributes[className])
+	end
+	
+	if includeGlobal then
+		TableMerge(attributeList, globalAttributes)
+	end
+	return attributeList
+end
+
+local function ClassHasPrivateAttrs(exactClass)
+	return nonGlobalAttributes[exactClass] ~= nil or missingAttributes[exactClass] ~= nil
+end
+
+local function ClassAcceptsGlobals(exactClass, classArch)
+	classArch = classArch or exactClass
+	return engineClassInfo[classArch].ImportsGlobals ~= false
+end
+
+local function ImportAttributesForSelection(includePrivate, includeGlobal, deleting)
+	local debugMission = workspace:FindFirstChild("DebugMission") or workspace:FindFirstChild("Level")
+	if debugMission == nil then warn("Couldn't find mission folder! Doing nothing") return end
+	
+	local selection = selectionService:Get()
+	local validSelection = nil
+	if includePrivate and not includeGlobal and not deleting then
+		validSelection = {}
+		for _, v in pairs(selection) do
+			local thisInstanceIsValid = ClassHasPrivateAttrs( GetInstanceClass(debugMission, v) ) 
+			if not thisInstanceIsValid then
+				warn(`Selection {v.Name} has no valid private attributes! Item will be skipped`)
+			else
+				validSelection[#validSelection+1] = v
+			end
+		end
+	end
+	
+	if includeGlobal and not includePrivate and not deleting then
+		validSelection = {}
+		for _, v in pairs(selection) do
+			local _, classArch = GetInstanceClass(debugMission, v)
+			local thisInstanceIsValid = ClassAcceptsGlobals( classArch )
+			if not thisInstanceIsValid then
+				warn(`Selection {v.Name} is of class {classArch} which does not make use of globals! Item will be skipped`) 
+			else
+				validSelection[#validSelection+1] = v
+			end
+		end
+	end
+	
+	local recording = changeHistoryService:TryBeginRecording("Import Attributes For Selection")
+	if not recording then warn("Failed to initialize history recording, doing nothing") end
+	
+	validSelection = validSelection or selection
+	for _, v in pairs(validSelection) do
+		local instanceClass, classArch = GetInstanceClass(debugMission, v)
+		local attributeList = BuildAttributeList(instanceClass, includePrivate, includeGlobal and ClassAcceptsGlobals(classArch))
+		ApplyAttributeList(v, attributeList, deleting)
+	end
+	
+	changeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
+	
+end
+
+local function NonGlobalImport()
+	ImportAttributesForSelection(true, false, false)
+end
+
+local function GlobalImport()
+	ImportAttributesForSelection(false, true, false)
+end
+
+local function AllImport()
+	ImportAttributesForSelection(true, true, false)
+end
+
+local function DeleteAll()
+	ImportAttributesForSelection(true, true, true)
+end
+
+local function BuildMenu(newPluginMenu, newAction)
+	local nonGlobalImport = newAction(
+		"AttributeImportNonGlobal", 
+		"Import Non-Global Attributes",
+		"Import all attributes specific to this Prop/StateComponent",
+		"rbxassetid://73551897964793"
+	)
+	nonGlobalImport.Triggered:Connect(NonGlobalImport)
+	
+	local globalImport = newAction(
+		"AttributeImportGlobal", 
+		"Import Global Attributes",
+		"Import all attributes which aren't specific to a given Prop/StateComponent",
+		"rbxassetid://109357542849581"
+	)
+	globalImport.Triggered:Connect(GlobalImport)
+	
+	local allImport = newAction(
+		"AttributeImportAll", 
+		"Import All Attributes",
+		"Import all global and relevant non-global attributes to this Prop/StateComponent",
+		"rbxassetid://88889481728921"
+	)
+	allImport.Triggered:Connect(AllImport)
+	
+	local deleteAll = newAction(
+		"AttributeImportDelete",
+		"Delete All Attributes",
+		"Delete all attributes from this Prop/StateComponent",
+		"rbxassetid://120558084860550"
+	)
+	deleteAll.Triggered:Connect(DeleteAll)
+	
+	pluginMenu = newPluginMenu("AttributeImporter", "Import Attributes", "rbxassetid://88889481728921")
+	pluginMenu:AddAction(nonGlobalImport)
+	pluginMenu:AddAction(globalImport)
+	pluginMenu:AddAction(allImport)
+	pluginMenu:AddAction(deleteAll)
+end
+
+local function OpenWindow()
+	pluginMenu:ShowAsync()
+end
+
+return {
+	ID = "Attribute Importer",
+	Tooltip = "Automatically import all supported attributes to a prop",
+	IconAssetID = "rbxassetid://88889481728921",
+	ClickedCallback = OpenWindow,
+	BuildMenu = BuildMenu
+}]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="Folder" referent="RBXA05CE8A349F943EF8CCE173101BB48F4">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<string name="Name">NotMineThisIsSperosPleaseDontSueMe</string>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+				<Item class="ModuleScript" referent="RBXC32FB30EA7354712B10546B552FCF57C">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">AttributesMap</string>
+						<string name="ScriptGuid">{5C9F99E6-2435-405E-989B-4D228C350EC3}</string>
+						<ProtectedString name="Source"><![CDATA[-- NOTE: Do not edit this file manually. Use PropCompiler.py.
+AttributeType = require(script.Parent.PropAttributeTypes)
+return {
+	AccessPoint = {
+		NetworkId = {AttributeType.NETWORK_ID, 1},
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		NetworkLink = {AttributeType.NETWORK_ID_STRING, ""},
+		TriggerInvestigation = {AttributeType.EXPRESSION, true},
+	},
+	AmmoBox = {
+	},
+	BadgeReader = {
+		TriggerVariable = {AttributeType.STATE_VALUE, ""},
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		CustomBadges = {AttributeType.STRING, ""},
+		UseITBadge = {AttributeType.BOOL, false},
+		UseLeadSecurityBadge = {AttributeType.BOOL, false},
+		UseSecurityBadge = {AttributeType.BOOL, false},
+	},
+	BarredWindow = {
+		GlassMaterial = {AttributeType.STRING, "SmoothPlastic"},
+		GlassTransparency = {AttributeType.NUMBER, 0.8},
+		HorizontalSpacing = {AttributeType.NUMBER, 2},
+		VerticalSpacing = {AttributeType.NUMBER, 2},
+	},
+	BoxStack2 = {
+	},
+	CandlePlate = {
+	},
+	CardboardBox = {
+	},
+	CardReader = {
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		TriggerVariable = {AttributeType.STATE_VALUE, ""},
+		ValidCards = {AttributeType.STRING, ""},
+		MinimumCard = {AttributeType.STRING, ""},
+		LightLevel = {AttributeType.INT, 1},
+		Blocked = {AttributeType.EXPRESSION, ""},
+	},
+	CeilingAccessPoint = {
+		NetworkId = {AttributeType.NETWORK_ID, 1},
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		NetworkLink = {AttributeType.NETWORK_ID_STRING, ""},
+		TriggerInvestigation = {AttributeType.EXPRESSION, true},
+	},
+	CircuitBoxLarge = {
+		ClientExaminedVariable = {AttributeType.STATE_VALUE, ""},
+		ExaminedVariable = {AttributeType.STATE_VALUE, ""},
+		RewiredVariable = {AttributeType.STATE_VALUE, ""},
+	},
+	ClimbablePipe = {
+	},
+	ClothingRack = {
+		Active = {AttributeType.EXPRESSION, ""},
+		Disguise = {AttributeType.STRING, ""},
+		UsedVariable = {AttributeType.STATE_VALUE, ""},
+	},
+	CodeCardReader = {
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		TriggerVariable = {AttributeType.STATE_VALUE, ""},
+		ValidCards = {AttributeType.STRING, ""},
+		CodeVariable = {AttributeType.STATE_VALUE, ""},
+		CodeRevealedVariable = {AttributeType.STATE_VALUE, ""},
+		WrongCodeVariable = {AttributeType.STATE_VALUE, ""},
+		CodeSeed = {AttributeType.INT, 1},
+		PromptText = {AttributeType.STRING, ""},
+		MinimumCard = {AttributeType.STRING, ""},
+		ReaderEnabled = {AttributeType.EXPRESSION, "1"},
+		AltPromptActive = {AttributeType.EXPRESSION, ""},
+		AltPromptSwitchTime = {AttributeType.NUMBER, 1},
+	},
+	CodeKeypad = {
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		TriggerVariable = {AttributeType.STATE_VALUE, ""},
+		CodeRevealedVariable = {AttributeType.STATE_VALUE, ""},
+		PromptText = {AttributeType.STRING, ""},
+		WrongCodeVariable = {AttributeType.STATE_VALUE, ""},
+		ReadoutText = {AttributeType.EXPRESSION, ""},
+		RewireTime = {AttributeType.NUMBER, 12},
+		PromptSubtitle = {AttributeType.STRING, ""},
+		KeypadEnabled = {AttributeType.EXPRESSION, "1"},
+		NoiseEnabled = {AttributeType.EXPRESSION, ""},
+		CodeVariable = {AttributeType.STATE_VALUE, ""},
+		CodeSeed = {AttributeType.INT, 1},
+	},
+	CombatCuttableFence = {
+	},
+	DecorativePipe = {
+		RingSpace = {AttributeType.NUMBER, 8},
+		Corner = {AttributeType.BOOL, false},
+		BendTop = {AttributeType.BOOL, false},
+	},
+	DecorativeVent = {
+		BendBottom = {AttributeType.INT, 0},
+		BendTop = {AttributeType.INT, 0},
+		RingSpace = {AttributeType.NUMBER, 8},
+		RingDepth = {AttributeType.NUMBER, 0},
+	},
+	DepositBox1 = {
+		TiltItem = {AttributeType.NUMBER, 0},
+		RotateItem = {AttributeType.NUMBER, 0},
+		Item = {AttributeType.STRING, ""},
+		ItemTagString = {AttributeType.STRING, ""},
+		KeyItem = {AttributeType.BOOL, false},
+		Active = {AttributeType.EXPRESSION, ""},
+		IncludeSidePart = {AttributeType.BOOL, true},
+		BoxNumber = {AttributeType.INT, 1},
+	},
+	DepositBox2 = {
+		TiltItem = {AttributeType.NUMBER, 0},
+		RotateItem = {AttributeType.NUMBER, 0},
+		Item = {AttributeType.STRING, ""},
+		ItemTagString = {AttributeType.STRING, ""},
+		KeyItem = {AttributeType.BOOL, false},
+		Active = {AttributeType.EXPRESSION, ""},
+		IncludeSidePart = {AttributeType.BOOL, true},
+		BoxNumber = {AttributeType.INT, 1},
+	},
+	DepositBox3 = {
+		TiltItem = {AttributeType.NUMBER, 0},
+		RotateItem = {AttributeType.NUMBER, 0},
+		Item = {AttributeType.STRING, ""},
+		ItemTagString = {AttributeType.STRING, ""},
+		KeyItem = {AttributeType.BOOL, false},
+		Active = {AttributeType.EXPRESSION, ""},
+		IncludeSidePart = {AttributeType.BOOL, true},
+		BoxNumber = {AttributeType.INT, 1},
+	},
+	DeskPhoneCallable = {
+		CallAcceptedVariable = {AttributeType.STATE_VALUE, ""},
+		CallIgnoredVariable = {AttributeType.STATE_VALUE, ""},
+		IsCalling = {AttributeType.EXPRESSION, ""},
+		CallTime = {AttributeType.INT, 15},
+	},
+	DeskSafe = {
+		ItemTagString = {AttributeType.STRING, ""},
+		Item = {AttributeType.STRING, ""},
+	},
+	DisguiseTrigger = {
+		Active = {AttributeType.EXPRESSION, ""},
+		Disguise = {AttributeType.STRING, ""},
+		UsedVariable = {AttributeType.STATE_VALUE, ""},
+	},
+	DomeCamera = {
+		AngleMax = {AttributeType.STRING, "0"},
+		AngleMin = {AttributeType.STRING, "0"},
+		Exterior = {AttributeType.BOOL, true},
+		NetworkLink = {AttributeType.NETWORK_ID_STRING, ""},
+		NetworkDestination = {AttributeType.NETWORK_ID_STRING, ""},
+		CamSet = {AttributeType.STRING, ""},
+		CameraArea = {AttributeType.STRING, ""},
+		AngleDown = {AttributeType.NUMBER, 0},
+		Wireless = {AttributeType.BOOL, true},
+		CamNumber = {AttributeType.INT, 0},
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		Angle = {AttributeType.STRING, 0},
+		DetectionSpeed = {AttributeType.NUMBER, 1},
+		LocationKey = {AttributeType.STRING, ""},
+		MapFloorOffset = {AttributeType.INT, 0},
+	},
+	DoorGlass = {
+		LockBack = {AttributeType.EXPRESSION, false},
+		LockFront = {AttributeType.EXPRESSION, false},
+		DoubleDoor = {AttributeType.EXPRESSION, false},
+		RemoteUnlock = {AttributeType.EXPRESSION, ""},
+		PathIgnoreUnlocked = {AttributeType.INT, 0},
+		PathIgnoreOpen = {AttributeType.INT, 0},
+		PathIgnoreBroken = {AttributeType.INT, 0},
+		PathRecover = {AttributeType.INT, 0},
+		BotCloseCondition = {AttributeType.EXPRESSION, ""},
+		Blocked = {AttributeType.EXPRESSION, ""},
+		NoKick = {AttributeType.EXPRESSION, false},
+		AutoLock = {AttributeType.EXPRESSION, false},
+		PathReq1 = {AttributeType.STRING, ""},
+		PathReq2 = {AttributeType.STRING, ""},
+		Access = {AttributeType.STRING, ""},
+		FailsafeUnlock = {AttributeType.EXPRESSION, ""},
+		DifficultLock = {AttributeType.EXPRESSION, false},
+		AlarmVariable = {AttributeType.STATE_VALUE, ""},
+		AlarmDisabled = {AttributeType.EXPRESSION, ""},
+		BotRelockCondition = {AttributeType.EXPRESSION, ""},
+	},
+	DoorMetal = {
+		LockBack = {AttributeType.EXPRESSION, false},
+		LockFront = {AttributeType.EXPRESSION, false},
+		DoubleDoor = {AttributeType.EXPRESSION, false},
+		RemoteUnlock = {AttributeType.EXPRESSION, ""},
+		PathIgnoreUnlocked = {AttributeType.INT, 0},
+		PathIgnoreOpen = {AttributeType.INT, 0},
+		PathIgnoreBroken = {AttributeType.INT, 0},
+		PathRecover = {AttributeType.INT, 0},
+		BotCloseCondition = {AttributeType.EXPRESSION, ""},
+		Blocked = {AttributeType.EXPRESSION, ""},
+		NoKick = {AttributeType.EXPRESSION, false},
+		AutoLock = {AttributeType.EXPRESSION, false},
+		PathReq1 = {AttributeType.STRING, ""},
+		PathReq2 = {AttributeType.STRING, ""},
+		Access = {AttributeType.STRING, ""},
+		FailsafeUnlock = {AttributeType.EXPRESSION, ""},
+		DifficultLock = {AttributeType.EXPRESSION, false},
+		DifficultDrill = {AttributeType.EXPRESSION, false},
+		AlarmVariable = {AttributeType.STATE_VALUE, ""},
+		AlarmDisabled = {AttributeType.EXPRESSION, ""},
+		BotRelockCondition = {AttributeType.EXPRESSION, ""},
+	},
+	DoorMetalElectronic = {
+		LockBack = {AttributeType.EXPRESSION, false},
+		LockFront = {AttributeType.EXPRESSION, false},
+		DoubleDoor = {AttributeType.EXPRESSION, false},
+		RemoteUnlock = {AttributeType.EXPRESSION, ""},
+		PathIgnoreUnlocked = {AttributeType.INT, 0},
+		PathIgnoreOpen = {AttributeType.INT, 0},
+		PathIgnoreBroken = {AttributeType.INT, 0},
+		PathRecover = {AttributeType.INT, 0},
+		BotCloseCondition = {AttributeType.EXPRESSION, ""},
+		Blocked = {AttributeType.EXPRESSION, ""},
+		NoKick = {AttributeType.EXPRESSION, false},
+		AutoLock = {AttributeType.EXPRESSION, false},
+		PathReq1 = {AttributeType.STRING, ""},
+		PathReq2 = {AttributeType.STRING, ""},
+		Access = {AttributeType.STRING, ""},
+		FailsafeUnlock = {AttributeType.EXPRESSION, ""},
+		DifficultLock = {AttributeType.EXPRESSION, false},
+		DifficultDrill = {AttributeType.EXPRESSION, false},
+		AlarmVariable = {AttributeType.STATE_VALUE, ""},
+		AlarmDisabled = {AttributeType.EXPRESSION, ""},
+		BotRelockCondition = {AttributeType.EXPRESSION, ""},
+	},
+	DoorPushLeft = {
+		LockBack = {AttributeType.EXPRESSION, false},
+		LockFront = {AttributeType.EXPRESSION, false},
+		DoubleDoor = {AttributeType.EXPRESSION, false},
+		RemoteUnlock = {AttributeType.EXPRESSION, ""},
+		PathIgnoreUnlocked = {AttributeType.INT, 0},
+		PathIgnoreOpen = {AttributeType.INT, 0},
+		PathIgnoreBroken = {AttributeType.INT, 0},
+		PathRecover = {AttributeType.INT, 0},
+		BotCloseCondition = {AttributeType.EXPRESSION, ""},
+		Blocked = {AttributeType.EXPRESSION, ""},
+		NoKick = {AttributeType.EXPRESSION, false},
+		AutoLock = {AttributeType.EXPRESSION, false},
+		PathReq1 = {AttributeType.STRING, ""},
+		PathReq2 = {AttributeType.STRING, ""},
+		Access = {AttributeType.STRING, ""},
+		FailsafeUnlock = {AttributeType.EXPRESSION, ""},
+		DifficultLock = {AttributeType.EXPRESSION, false},
+		DifficultDrill = {AttributeType.EXPRESSION, false},
+		AlarmVariable = {AttributeType.STATE_VALUE, ""},
+		AlarmDisabled = {AttributeType.EXPRESSION, ""},
+		BotRelockCondition = {AttributeType.EXPRESSION, ""},
+	},
+	DoorWood = {
+		LockBack = {AttributeType.EXPRESSION, false},
+		LockFront = {AttributeType.EXPRESSION, false},
+		DoubleDoor = {AttributeType.EXPRESSION, false},
+		RemoteUnlock = {AttributeType.EXPRESSION, ""},
+		PathIgnoreUnlocked = {AttributeType.INT, 0},
+		PathIgnoreOpen = {AttributeType.INT, 0},
+		PathIgnoreBroken = {AttributeType.INT, 0},
+		PathRecover = {AttributeType.INT, 0},
+		BotCloseCondition = {AttributeType.EXPRESSION, ""},
+		Blocked = {AttributeType.EXPRESSION, ""},
+		NoKick = {AttributeType.EXPRESSION, false},
+		AutoLock = {AttributeType.EXPRESSION, false},
+		PathReq1 = {AttributeType.STRING, ""},
+		PathReq2 = {AttributeType.STRING, ""},
+		Access = {AttributeType.STRING, ""},
+		FailsafeUnlock = {AttributeType.EXPRESSION, ""},
+		DifficultLock = {AttributeType.EXPRESSION, false},
+		AlarmVariable = {AttributeType.STATE_VALUE, ""},
+		AlarmDisabled = {AttributeType.EXPRESSION, ""},
+		BotRelockCondition = {AttributeType.EXPRESSION, ""},
+	},
+	DoorWoodElectronic = {
+		LockBack = {AttributeType.EXPRESSION, false},
+		LockFront = {AttributeType.EXPRESSION, false},
+		DoubleDoor = {AttributeType.EXPRESSION, false},
+		RemoteUnlock = {AttributeType.EXPRESSION, ""},
+		PathIgnoreUnlocked = {AttributeType.INT, 0},
+		PathIgnoreOpen = {AttributeType.INT, 0},
+		PathIgnoreBroken = {AttributeType.INT, 0},
+		PathRecover = {AttributeType.INT, 0},
+		BotCloseCondition = {AttributeType.EXPRESSION, ""},
+		Blocked = {AttributeType.EXPRESSION, ""},
+		NoKick = {AttributeType.EXPRESSION, false},
+		AutoLock = {AttributeType.EXPRESSION, false},
+		PathReq1 = {AttributeType.STRING, ""},
+		PathReq2 = {AttributeType.STRING, ""},
+		Access = {AttributeType.STRING, ""},
+		FailsafeUnlock = {AttributeType.EXPRESSION, ""},
+		DifficultLock = {AttributeType.EXPRESSION, false},
+		AlarmVariable = {AttributeType.STATE_VALUE, ""},
+		AlarmDisabled = {AttributeType.EXPRESSION, ""},
+		BotRelockCondition = {AttributeType.EXPRESSION, ""},
+	},
+	DoubleVaultDoor = {
+		OpenCondition = {AttributeType.EXPRESSION, ""},
+	},
+	Elevator = {
+	},
+	ElevatorCallButton = {
+		CallVariable = {AttributeType.STATE_VALUE, ""},
+		DisabledInCombat = {AttributeType.BOOL, false},
+		Active = {AttributeType.EXPRESSION, ""},
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+	},
+	ElevatorCardReader = {
+		TriggerVariable = {AttributeType.STATE_VALUE, ""},
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		DisabledInCombat = {AttributeType.BOOL, false},
+	},
+	EventPumpkin = {
+	},
+	ExplosionSource = {
+	},
+	FloorAccessCover = {
+		CanOpen = {AttributeType.EXPRESSION, ""},
+		OpenedVariable = {AttributeType.STATE_VALUE, ""},
+	},
+	Flowerpot = {
+		Seed = {AttributeType.INT, 0},
+	},
+	FreestandingSafe = {
+		Seed = {AttributeType.INT, 1},
+		CanInteract = {AttributeType.EXPRESSION, ""},
+		CodeRevealedVariable = {AttributeType.STATE_VALUE, ""},
+		ExplosiveOpenVariable = {AttributeType.STATE_VALUE, ""},
+		OpenedVariable = {AttributeType.STATE_VALUE, ""},
+		ItemRemovedVariable = {AttributeType.STATE_VALUE, ""},
+		ItemRotationX = {AttributeType.NUMBER, 0},
+		ItemRotationY = {AttributeType.NUMBER, 0},
+		ItemRotationZ = {AttributeType.NUMBER, 0},
+		Item = {AttributeType.STRING, ""},
+		ItemTagString = {AttributeType.STRING, ""},
+		KeyItem = {AttributeType.BOOL, false},
+	},
+	GarageDoor = {
+		Height = {AttributeType.EXPRESSION, "0"},
+	},
+	GlassKitchenTable = {
+	},
+	HackableComputer = {
+		MonitorOffset = {AttributeType.VECTOR3, Vector3.new(0, 0, 0)},
+		MonitorAngle = {AttributeType.NUMBER, 0},
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		ScreenText = {AttributeType.EXPRESSION, ""},
+		DesktopTransparency = {AttributeType.NUMBER, 0},
+		NetworkId = {AttributeType.NETWORK_ID, 0},
+		NetworkLink = {AttributeType.NETWORK_ID_STRING, ""},
+		PasswordUnlockedVariable = {AttributeType.STATE_VALUE, ""},
+		NetworkNameTag = {AttributeType.STRING, ""},
+		DesktopBackground = {AttributeType.STRING, ""},
+		PasswordDifficulty = {AttributeType.EXPRESSION, 0},
+		OldMonitor = {AttributeType.BOOL, false},
+		PhysicalAccessBlocked = {AttributeType.EXPRESSION, 0},
+	},
+	HeavySecurityDoor = {
+		ServerExplosiveFullDamageVariable = {AttributeType.STATE_VALUE, ""},
+		ExplosiveNoDamageVariable = {AttributeType.STATE_VALUE, ""},
+		ExplosivePartialDamageVariable = {AttributeType.STATE_VALUE, ""},
+		ExplosiveFullDamageVariable = {AttributeType.STATE_VALUE, ""},
+		OpenCondition = {AttributeType.EXPRESSION, ""},
+	},
+	Helicopter = {
+		ActiveCondition = {AttributeType.EXPRESSION, ""},
+		StopAttemptDialogue = {AttributeType.STRING, ""},
+		StartupTime = {AttributeType.INT, 60},
+		ProgressVariable = {AttributeType.STATE_VALUE, ""},
+		PoliceShutdownVariable = {AttributeType.STATE_VALUE, ""},
+	},
+	HiddenWallSafe = {
+		PromptVisible = {AttributeType.EXPRESSION, ""},
+		Item = {AttributeType.STRING, ""},
+		ItemTagString = {AttributeType.STRING, ""},
+		CodeRevealedVariable = {AttributeType.STATE_VALUE, ""},
+		OpenedVariable = {AttributeType.STATE_VALUE, ""},
+		Seed = {AttributeType.INT, 1},
+		ExplosiveOpenVariable = {AttributeType.STATE_VALUE, ""},
+		ItemRotationX = {AttributeType.INT, 0},
+		ItemRotationY = {AttributeType.INT, 0},
+		ItemRotationZ = {AttributeType.INT, 0},
+		Image = {AttributeType.INT, 0},
+		SafeLocatedVariable = {AttributeType.STATE_VALUE, ""},
+		CoverColor = {AttributeType.OPTIONAL_MISSION_COLOR, Color3.new(0, 0, 0)},
+		OffsetX = {AttributeType.NUMBER, 0},
+		KeyItem = {AttributeType.BOOL, false},
+		CoverMaterial = {AttributeType.STRING, ""},
+		SafeTag = {AttributeType.STRING, ""},
+		HiddenShuffleId = {AttributeType.STRING, ""},
+	},
+	IndustrialShelvesSmall = {
+		BoxSeed = {AttributeType.INT, 0},
+		BoxDensity = {AttributeType.NUMBER, 0},
+		BoxColor = {AttributeType.OPTIONAL_MISSION_COLOR, Color3.new(0, 0, 0)},
+	},
+	InteractionBlocker = {
+	},
+	IntroCam = {
+	},
+	Ladder = {
+		Decorative = {AttributeType.BOOL, false},
+	},
+	LandscapePhotoHorizontalRectangle = {
+		Image = {AttributeType.INT, 0},
+	},
+	LandscapePhotoSquare = {
+		Image = {AttributeType.INT, 0},
+	},
+	LandscapePhotoVerticalThird = {
+		Image = {AttributeType.INT, 0},
+		OffsetX = {AttributeType.NUMBER, 0},
+	},
+	Laptop = {
+	},
+	LaptopOld = {
+		DesktopBackground = {AttributeType.STRING, ""},
+		PasswordUnlockedVariable = {AttributeType.STATE_VALUE, ""},
+		DesktopTransparency = {AttributeType.NUMBER, 0},
+		NetworkId = {AttributeType.NETWORK_ID, 1},
+		NetworkLink = {AttributeType.NETWORK_ID_STRING, ""},
+		PasswordLockedCondition = {AttributeType.EXPRESSION, ""},
+		PasswordDifficulty = {AttributeType.EXPRESSION, 0},
+		ScreenText = {AttributeType.EXPRESSION, ""},
+		NetworkNameTag = {AttributeType.STRING, ""},
+	},
+	LaundryBasket = {
+		Disguise = {AttributeType.STRING, ""},
+		UsedVariable = {AttributeType.STATE_VALUE, ""},
+	},
+	LeverageMove = {
+		MoveDist = {AttributeType.EXPRESSION, 0},
+		Prop = {AttributeType.STRING, ""},
+		MovedToEndVariable = {AttributeType.STATE_VALUE, ""},
+		VisibleCondition = {AttributeType.EXPRESSION, "1"},
+		Heavy = {AttributeType.BOOL, true},
+	},
+	LongCoffeeTable = {
+	},
+	LootCash = {
+		ItemTagString = {AttributeType.STRING, ""},
+	},
+	LootCash2 = {
+		ItemTagString = {AttributeType.STRING, ""},
+	},
+	LootThermite = {
+		ItemTagString = {AttributeType.STATE_VALUE, ""},
+	},
+	LootWeapons = {
+		ItemTagString = {AttributeType.STRING, ""},
+	},
+	LowVent = {
+		Blocked = {AttributeType.EXPRESSION, ""},
+	},
+	MetalDetector = {
+		PowerLevel = {AttributeType.EXPRESSION, ""},
+	},
+	MinimapBlock = {
+	},
+	Monitor = {
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		ScreenText = {AttributeType.EXPRESSION, ""},
+		DesktopTransparency = {AttributeType.NUMBER, 0},
+		DesktopBackground = {AttributeType.STRING, ""},
+	},
+	NetworkSwitch = {
+		NetworkId = {AttributeType.NETWORK_ID, 1},
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		NetworkLink = {AttributeType.NETWORK_ID_STRING, ""},
+		TriggerInvestigation = {AttributeType.EXPRESSION, true},
+	},
+	NoDropZone = {
+	},
+	OldMonitor = {
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		ScreenText = {AttributeType.EXPRESSION, ""},
+		DesktopTransparency = {AttributeType.NUMBER, 0},
+		DesktopBackground = {AttributeType.STRING, ""},
+	},
+	PowerBoxLarge = {
+		TagWhileActive = {AttributeType.BOOL, false},
+		AllowDisabling = {AttributeType.EXPRESSION, "1"},
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		CombatDisableTarget = {AttributeType.EXPRESSION, ""},
+		NoPropDamage = {AttributeType.EXPRESSION, ""},
+		AllowRestoring = {AttributeType.EXPRESSION, "1"},
+	},
+	PowerBoxSmall = {
+		TagWhileActive = {AttributeType.BOOL, false},
+		AllowDisabling = {AttributeType.EXPRESSION, "1"},
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		CombatDisableTarget = {AttributeType.EXPRESSION, ""},
+		NoPropDamage = {AttributeType.EXPRESSION, ""},
+		AllowRestoring = {AttributeType.EXPRESSION, "1"},
+		Locked = {AttributeType.BOOL, false},
+		ObjectName = {AttributeType.STRING, ""},
+		PowerAreaParent = {AttributeType.STATE_VALUE, ""},
+	},
+	PropBase = {
+	},
+	RadioStation = {
+		SocialEngineeringLevel = {AttributeType.INT, 1},
+		DistractionDisabled = {AttributeType.EXPRESSION, ""},
+		DistractionActive = {AttributeType.EXPRESSION, ""},
+		DistractionVariable = {AttributeType.STATE_VALUE, ""},
+		DistractionDialogue = {AttributeType.STRING, ""},
+		DistractionSubtitle = {AttributeType.STRING, ""},
+		Enabled = {AttributeType.EXPRESSION, "1"},
+	},
+	ScalablePlanter = {
+		PlantHeight = {AttributeType.NUMBER, 3},
+		PlantWidth = {AttributeType.NUMBER, 0},
+	},
+	ScalableWallPlanter = {
+		PlantWidth = {AttributeType.NUMBER, 1},
+		PlantHeight = {AttributeType.NUMBER, 2},
+	},
+	SearchableFilingCabinets = {
+		FilesSpawned = {AttributeType.EXPRESSION, ""},
+		KeyItem = {AttributeType.BOOL, false},
+		ItemRemovedVariable = {AttributeType.STATE_VALUE, ""},
+		ItemTagString = {AttributeType.STRING, ""},
+	},
+	SecurityCamera = {
+		AngleMax = {AttributeType.STRING, "0"},
+		AngleMin = {AttributeType.STRING, "0"},
+		Exterior = {AttributeType.BOOL, true},
+		NetworkLink = {AttributeType.NETWORK_ID_STRING, ""},
+		NetworkDestination = {AttributeType.NETWORK_ID_STRING, ""},
+		CamSet = {AttributeType.STRING, ""},
+		CameraArea = {AttributeType.STRING, ""},
+		AngleDown = {AttributeType.NUMBER, 0},
+		Wireless = {AttributeType.BOOL, true},
+		CamNumber = {AttributeType.INT, 0},
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		Angle = {AttributeType.STRING, 0},
+		DetectionSpeed = {AttributeType.NUMBER, 1},
+		LocationKey = {AttributeType.STRING, ""},
+		MapFloorOffset = {AttributeType.INT, 0},
+	},
+	ServerRack = {
+	},
+	ServerRackWideTerminal = {
+		NetworkId = {AttributeType.NETWORK_ID, 1},
+		NetworkLink = {AttributeType.NETWORK_ID_STRING, ""},
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		Disconnected = {AttributeType.EXPRESSION, ""},
+		DesktopTransparency = {AttributeType.NUMBER, 0},
+		DesktopBackground = {AttributeType.STRING, ""},
+		UseOldMonitor = {AttributeType.OPTIONAL_BOOL, false},
+		ScreenText = {AttributeType.EXPRESSION, ""},
+		NetworkNameTag = {AttributeType.STRING, ""},
+		PasswordDifficulty = {AttributeType.EXPRESSION, ""},
+		PasswordUnlockedVariable = {AttributeType.STATE_VALUE, ""},
+		PasswordLockedCondition = {AttributeType.EXPRESSION, ""},
+		ManualPasswordVariable = {AttributeType.STATE_VALUE, ""},
+		ManualPasswordList = {AttributeType.STRING, ""},
+		ManualPasswordRevealed = {AttributeType.EXPRESSION, ""},
+		SecurityKeyNeeded = {AttributeType.EXPRESSION, ""},
+		SecurityKeyInsertedVariable = {AttributeType.STATE_VALUE, ""},
+	},
+	StaticAmmoBox = {
+	},
+	SurfaceText = {
+		TextKey = {AttributeType.STRING, ""},
+		Font = {AttributeType.STRING, ""},
+		HorizontalAlignment = {AttributeType.INT, 2},
+		TextColor3 = {AttributeType.OPTIONAL_MISSION_COLOR, Color3.new(1, 1, 1)},
+	},
+	TableGlass = {
+	},
+	TableGlassLarge = {
+	},
+	ThermiteBurn = {
+		ProgressVariable = {AttributeType.STATE_VALUE, ""},
+		StartedVariable = {AttributeType.STATE_VALUE, ""},
+		BurnTime = {AttributeType.INT, 90},
+	},
+	ThinBush = {
+	},
+	TimelockCodePanel = {
+		GlobalCountdownState = {AttributeType.STATE_VALUE, ""},
+		CompletedVariable = {AttributeType.STATE_VALUE, ""},
+		TimelockEnabled = {AttributeType.EXPRESSION, ""},
+		SetState = {AttributeType.STATE_VALUE, ""},
+		CountTime = {AttributeType.NUMBER, 60},
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		SetValue = {AttributeType.EXPRESSION, ""},
+	},
+	TrespassZoneDisplay = {
+		Enabled = {AttributeType.BOOL, true},
+	},
+	TriggerLocalChat = {
+		Id = {AttributeType.STRING, ""},
+		Variable = {AttributeType.STATE_VALUE, ""},
+		Active = {AttributeType.EXPRESSION, ""},
+	},
+	TriggerVision = {
+		Hold = {AttributeType.NUMBER, 0},
+		Dist = {AttributeType.NUMBER, 40},
+		ZoneSize = {AttributeType.NUMBER, 0.8},
+		Active = {AttributeType.EXPRESSION, ""},
+		Variable = {AttributeType.STATE_VALUE, ""},
+	},
+	TriggerZone = {
+		IsGlobal = {AttributeType.BOOL, false},
+		IsLocal = {AttributeType.BOOL, false},
+		Active = {AttributeType.EXPRESSION, ""},
+		Variable = {AttributeType.STATE_VALUE, ""},
+		HighlightZone = {AttributeType.BOOL, false},
+		UpdateFrequency = {AttributeType.NUMBER, 1},
+	},
+	TutorialText = {
+	},
+	Van = {
+		IsOpen = {AttributeType.EXPRESSION, ""},
+		DoorAngleR = {AttributeType.EXPRESSION, 0},
+		DoorAngleL = {AttributeType.EXPRESSION, 0},
+	},
+	VaultOpenRight = {
+		OpenCondition = {AttributeType.EXPRESSION, ""},
+	},
+	WallSafe = {
+		Seed = {AttributeType.INT, 1},
+		CanInteract = {AttributeType.EXPRESSION, ""},
+		CodeRevealedVariable = {AttributeType.STATE_VALUE, ""},
+		ExplosiveOpenVariable = {AttributeType.STATE_VALUE, ""},
+		OpenedVariable = {AttributeType.STATE_VALUE, ""},
+		ItemRemovedVariable = {AttributeType.STATE_VALUE, ""},
+		ItemRotationX = {AttributeType.NUMBER, 0},
+		ItemRotationY = {AttributeType.NUMBER, 0},
+		ItemRotationZ = {AttributeType.NUMBER, 0},
+		Item = {AttributeType.STRING, ""},
+		ItemTagString = {AttributeType.STRING, ""},
+		KeyItem = {AttributeType.BOOL, false},
+	},
+	Window = {
+		Bulletproof = {AttributeType.EXPRESSION, false},
+		StateValue = {AttributeType.STATE_VALUE, ""},
+		GlassColor = {AttributeType.OPTIONAL_MISSION_COLOR, Color3.new(0, 0, 0)},
+	},
+	WindowClimb = {
+		Blocked = {AttributeType.EXPRESSION, ""},
+		Vertical = {AttributeType.BOOL, false},
+	},
+	WoodChair = {
+	},
+	WoodShootingTarget = {
+	},
+	WoodTargetWithSensor = {
+	},
+	LandscapePhotoIds = {
+	},
+	AccessRequestNode = {
+		ServerCondition = {AttributeType.EXPRESSION, ""},
+		Dialogue = {AttributeType.STRING, ""},
+		ToolRequired = {AttributeType.STRING, ""},
+		AccessVariable = {AttributeType.STATE_VALUE, ""},
+		SocialEngineeringLevel = {AttributeType.INT, 0},
+		BotServerTag = {AttributeType.STRING, ""},
+		AccessOnceVariable = {AttributeType.STATE_VALUE, ""},
+		AccessTime = {AttributeType.NUMBER, 1},
+	},
+	AlarmButton = {
+	},
+	ArmoredTruck = {
+	},
+	BasicPart = {
+		Material = {AttributeType.STRING, "SmoothPlastic"},
+		ColorHex = {AttributeType.STRING, "FFFFFF"},
+	},
+	BiometricLock = {
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		UsedVariable = {AttributeType.STATE_VALUE, ""},
+		BotServerTag = {AttributeType.STRING, ""},
+		RewireEnabled = {AttributeType.EXPRESSION, ""},
+	},
+	Cabinet = {
+	},
+	ConditionalHighJumpRequired = {
+		Climber3Condition = {AttributeType.EXPRESSION, 1},
+		Color = {AttributeType.OPTIONAL_MISSION_COLOR, Color3.new(0, 0, 0)},
+		Material = {AttributeType.STRING, "Plastic"},
+	},
+	CustomMissionLoadPoint = {
+	},
+	CustomReportPoint = {
+		Hidden = {AttributeType.BOOL, false},
+		Active = {AttributeType.EXPRESSION, ""},
+		CameraOnly = {AttributeType.BOOL, false},
+		AutoAlertBotTag = {AttributeType.STRING, ""},
+		Visibility = {AttributeType.NUMBER, 1},
+		RaiseAlert = {AttributeType.INT, 1},
+		MinAlert = {AttributeType.INT, 1},
+		MaxAlert = {AttributeType.INT, 3},
+		NotificationMessage = {AttributeType.STRING, ""},
+		ReportDialogue = {AttributeType.STRING, ""},
+	},
+	DebugSpawnLocation = {
+		Active = {AttributeType.BOOL, false},
+	},
+	DynamicNode = {
+		Id = {AttributeType.STRING, ""},
+		TakedownImmunity = {AttributeType.BOOL, false},
+	},
+	ElevatorFunctional = {
+		OpenCondition = {AttributeType.EXPRESSION, ""},
+		PlayerInElevatorVariable = {AttributeType.STATE_VALUE, ""},
+		BotInElevator = {AttributeType.STATE_VALUE, ""},
+		UsedVariable = {AttributeType.STATE_VALUE, ""},
+		LinkedElevator = {AttributeType.STRING, ""},
+		NoUsing = {AttributeType.BOOL, false},
+		NoDropBlocking = {AttributeType.BOOL, false},
+		WarpTargetId = {AttributeType.STRING, ""},
+		WarpPointId = {AttributeType.STRING, ""},
+	},
+	EscapeZone = {
+	},
+	FlowStart = {
+	},
+	FreeTrigger = {
+		TitleKey = {AttributeType.STRING, ""},
+		SubtitleKey = {AttributeType.STRING, ""},
+		DisabledSubtitle = {AttributeType.STRING, ""},
+		ServerVisible = {AttributeType.EXPRESSION, ""},
+		ClientVisible = {AttributeType.EXPRESSION, ""},
+		ServerEnabled = {AttributeType.EXPRESSION, ""},
+		HoldTime = {AttributeType.NUMBER, 0.5},
+		HoldAlert = {AttributeType.EXPRESSION, ""},
+		SaveProgress = {AttributeType.BOOL, false},
+		Tool = {AttributeType.STRING, ""},
+		LinkToProp = {AttributeType.BOOL, false},
+		HiddenShuffleId = {AttributeType.STRING, ""},
+		SetVariable = {AttributeType.STATE_VALUE, ""},
+		SetClientVariable = {AttributeType.STATE_VALUE, ""},
+		TagWhileVisible = {AttributeType.BOOL, false},
+		Debug = {AttributeType.BOOL, false},
+		IncrementClientVariable = {AttributeType.STATE_VALUE, ""},
+		OmniDir = {AttributeType.BOOL, false},
+	},
+	GuardCombatNode = {
+	},
+	init = {
+	},
+	IntercomCode = {
+		SocialEngineeringDialogue = {AttributeType.STRING, ""},
+		TriggerVariable = {AttributeType.STATE_VALUE, ""},
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		HostageUse = {AttributeType.STATE_VALUE, ""},
+		PickupNode = {AttributeType.STRING, ""},
+		PickupVariable = {AttributeType.STATE_VALUE, ""},
+		CallCondition = {AttributeType.EXPRESSION, ""},
+		CallConditionPrompt = {AttributeType.STRING, ""},
+		OpenedWithBluffVariable = {AttributeType.STATE_VALUE, ""},
+		OpenedWithHostageVariable = {AttributeType.STATE_VALUE, ""},
+		SocialEngineeringLevel = {AttributeType.NUMBER, 0},
+		Responder = {AttributeType.STRING, ""},
+	},
+	IntercomPanel = {
+		TriggerVariable = {AttributeType.STATE_VALUE, ""},
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+	},
+	InvestigationStandTrigger = {
+		ActiveCondition = {AttributeType.EXPRESSION, ""},
+		HighPriority = {AttributeType.BOOL, false},
+		BotServerTag = {AttributeType.STRING, ""},
+		ArrivalVariableDelay = {AttributeType.NUMBER, 0},
+		ArrivalVariable = {AttributeType.STATE_VALUE, ""},
+		Anim = {AttributeType.STRING, ""},
+		Timeout = {AttributeType.NUMBER, 0},
+		CallDialogue = {AttributeType.STRING, ""},
+	},
+	InvestigationTrigger = {
+	},
+	ItemDeposit = {
+		SubtitleKey = {AttributeType.STRING, ""},
+		DepositedVariable = {AttributeType.STATE_VALUE, ""},
+		ItemTagForDeposit = {AttributeType.STRING, ""},
+		ServerVisible = {AttributeType.EXPRESSION, ""},
+		TitleKey = {AttributeType.STRING, ""},
+		ClientVisible = {AttributeType.EXPRESSION, ""},
+	},
+	ItemSpawn = {
+		Item = {AttributeType.STRING, ""},
+		ItemTagString = {AttributeType.STRING, ""},
+		ModelHidden = {AttributeType.BOOL, false},
+		FlatTrigger = {AttributeType.BOOL, false},
+		InitialPickupTime = {AttributeType.NUMBER, 0},
+		PickupCondition = {AttributeType.EXPRESSION, ""},
+		KeyItem = {AttributeType.BOOL, false},
+		ItemRemovedVariable = {AttributeType.STATE_VALUE, ""},
+		IsSpawned = {AttributeType.EXPRESSION, ""},
+	},
+	KillZone = {
+		BotServerTag = {AttributeType.STRING, ""},
+		KillerInZone = {AttributeType.BOOL, false},
+		TargetInZone = {AttributeType.BOOL, false},
+		Active = {AttributeType.EXPRESSION, ""},
+		KillCountVariable = {AttributeType.STATE_VALUE, ""},
+	},
+	LeaningCover = {
+		AllowSpawning = {AttributeType.EXPRESSION, false},
+		Enabled = {AttributeType.EXPRESSION, true},
+		SpawnsIgnoreProximity = {AttributeType.BOOL, false},
+		UseFromAdjacentRoom = {AttributeType.BOOL, false},
+		HoldDoor = {AttributeType.BOOL, false},
+		ReverseDoor = {AttributeType.BOOL, false},
+		CoverTag = {AttributeType.STRING, ""},
+		HoldPriority = {AttributeType.EXPRESSION, 0},
+		LeanRight = {AttributeType.BOOL, false},
+	},
+	LeaveMissionPoint = {
+	},
+	LootGeneric = {
+		ItemTagString = {AttributeType.STATE_VALUE, ""},
+		BagColor = {AttributeType.OPTIONAL_MISSION_COLOR, Color3.new(0, 0, 0)},
+		BagType = {AttributeType.STRING, "Backpack"},
+		ModelHidden = {AttributeType.BOOL, false},
+		InitialPickupTime = {AttributeType.NUMBER, 0.5},
+		ItemRemovedVariable = {AttributeType.STRING, ""},
+		Contents = {AttributeType.STRING, ""},
+	},
+	MissionEndZone = {
+		PlayersExitedVariable = {AttributeType.STATE_VALUE, ""},
+		ItemRequired = {AttributeType.STRING, ""},
+		ItemSecuredVariable = {AttributeType.STATE_VALUE, ""},
+		Active = {AttributeType.EXPRESSION, ""},
+		OpenForAll = {AttributeType.EXPRESSION, ""},
+		HighlightZone = {AttributeType.BOOL, true},
+	},
+	MissionExit = {
+	},
+	PathfindingBlocker = {
+	},
+	PlaceholderProp = {
+	},
+	PointOfInterest = {
+		Icon = {AttributeType.STRING, ""},
+		IconScale = {AttributeType.NUMBER, 1},
+	},
+	PowerRoomProp1 = {
+		PowerArea = {AttributeType.STRING, ""},
+		DetectSabotage = {AttributeType.BOOL, true},
+		DamagedVariable = {AttributeType.STATE_VALUE, ""},
+	},
+	PowerRoomProp2 = {
+		PowerArea = {AttributeType.STRING, ""},
+		DetectSabotage = {AttributeType.BOOL, true},
+		DamagedVariable = {AttributeType.STATE_VALUE, ""},
+	},
+	RandomBotSpawnLocation = {
+		StartingSpawnOnly = {AttributeType.BOOL, false},
+		Active = {AttributeType.EXPRESSION, true},
+	},
+	RewireablePanel = {
+		PowerArea = {AttributeType.STATE_VALUE, ""},
+		TriggerVariable = {AttributeType.STATE_VALUE, ""},
+		RewireEnabled = {AttributeType.EXPRESSION, "1"},
+		ObjectName = {AttributeType.STRING, ""},
+		DifficultRewire = {AttributeType.BOOL, false},
+	},
+	SearchableFile = {
+		TitleKey = {AttributeType.STRING, ""},
+		SubtitleKey = {AttributeType.STRING, ""},
+		ServerVisible = {AttributeType.EXPRESSION, ""},
+		ClientVisible = {AttributeType.EXPRESSION, ""},
+		ServerEnabled = {AttributeType.EXPRESSION, ""},
+		HoldTime = {AttributeType.NUMBER, 2},
+		HoldAlert = {AttributeType.EXPRESSION, ""},
+		DisabledTitle = {AttributeType.EXPRESSION, ""},
+		DisabledSubtitle = {AttributeType.EXPRESSION, ""},
+		Notification = {AttributeType.STRING, ""},
+		SetVariable = {AttributeType.STATE_VALUE, ""},
+	},
+	ShuffleTarget = {
+		ShuffleTag = {AttributeType.STRING, ""},
+		MatchVariable = {AttributeType.STATE_VALUE, ""},
+	},
+	SoundSource = {
+		SoundId = {AttributeType.EXPRESSION, "0"},
+		Volume = {AttributeType.NUMBER, 0.5},
+		Looped = {AttributeType.BOOL, false},
+		Active = {AttributeType.EXPRESSION, ""},
+		SoundLength = {AttributeType.NUMBER, 0},
+		RollOffMaxDistance = {AttributeType.NUMBER, 10000},
+	},
+	SpawnLocation = {
+	},
+	StandingCover = {
+		AllowSpawning = {AttributeType.EXPRESSION, false},
+		Enabled = {AttributeType.EXPRESSION, true},
+		SpawnsIgnoreProximity = {AttributeType.BOOL, false},
+		UseFromAdjacentRoom = {AttributeType.BOOL, false},
+		HoldDoor = {AttributeType.BOOL, false},
+		ReverseDoor = {AttributeType.BOOL, false},
+		CoverTag = {AttributeType.STRING, ""},
+		HoldPriority = {AttributeType.EXPRESSION, 0},
+	},
+	StateScriptPart = {
+	},
+	TriggerHit = {
+	},
+	TriggerRoom = {
+		Active = {AttributeType.EXPRESSION, ""},
+		PlayersInRoomVariable = {AttributeType.STATE_VALUE, ""},
+		ClientInRoomVariable = {AttributeType.STATE_VALUE, ""},
+	},
+	TriggerRoomBot = {
+		BotServerTag = {AttributeType.STRING, ""},
+		ActiveCountVariable = {AttributeType.STATE_VALUE, ""},
+		HostageCountVariable = {AttributeType.STATE_VALUE, ""},
+		Active = {AttributeType.EXPRESSION, ""},
+	},
+	TriggerThreshhold = {
+		PlayersBeforeThreshholdVariable = {AttributeType.STATE_VALUE, ""},
+		PlayersAfterThreshholdVariable = {AttributeType.STATE_VALUE, ""},
+		Active = {AttributeType.EXPRESSION, ""},
+	},
+	TriggerZoneBot = {
+		RagdollCountVariable = {AttributeType.STATE_VALUE, ""},
+		HostageCountVariable = {AttributeType.STATE_VALUE, ""},
+		DeathCountVariable = {AttributeType.STATE_VALUE, ""},
+		BotServerTag = {AttributeType.STRING, ""},
+		Active = {AttributeType.EXPRESSION, ""},
+	},
+	VisionBlocker = {
+	},
+	WarpPoint = {
+		WarpPointId = {AttributeType.STRING, ""},
+		WarpTargetId = {AttributeType.STRING, ""},
+		WarpOnHit = {AttributeType.EXPRESSION, ""},
+		WarpKeepsOffset = {AttributeType.BOOL, true},
+		WarpOnIncrement = {AttributeType.EXPRESSION, ""},
+		WarpHostages = {AttributeType.BOOL, true},
+	},
+	AlarmedBehaviorOverride = {
+		BotServerTag = {AttributeType.STRING, ""},
+		CustomBehavior = {AttributeType.STRING, ""},
+	},
+	AlertRaiseCondition = {
+		Amount = {AttributeType.INT, 1},
+		MinValue = {AttributeType.INT, 1},
+		MaxValue = {AttributeType.INT, 3},
+		Reason = {AttributeType.STRING, ""},
+		Condition = {AttributeType.EXPRESSION, ""},
+	},
+	BodyAltTrigger = {
+		BotServerTag = {AttributeType.STRING, ""},
+		HoldTime = {AttributeType.NUMBER, 1},
+		TitleKey = {AttributeType.STRING, ""},
+		SubtitleKey = {AttributeType.STRING, ""},
+		TriggerNotification = {AttributeType.STRING, ""},
+		TriggerVariable = {AttributeType.STATE_VALUE, ""},
+		BotClientTag = {AttributeType.STRING, ""},
+		ClientVisible = {AttributeType.EXPRESSION, "1"},
+		ServerEnabled = {AttributeType.EXPRESSION, "1"},
+	},
+	BotAltTrigger = {
+		BotClientTag = {AttributeType.STRING, ""},
+		BotServerTag = {AttributeType.STRING, ""},
+		ServerEnabled = {AttributeType.EXPRESSION, ""},
+		AllowHostages = {AttributeType.BOOL, false},
+		TriggerNotification = {AttributeType.STRING, ""},
+		TriggerLocalNotification = {AttributeType.STRING, ""},
+		TriggerVariable = {AttributeType.STATE_VALUE, ""},
+		TitleKey = {AttributeType.STRING, ""},
+		AllowPatroling = {AttributeType.BOOL, false},
+		ClientVisible = {AttributeType.EXPRESSION, "1"},
+		HoldTime = {AttributeType.NUMBER, 1},
+		SubtitleKey = {AttributeType.STRING, ""},
+	},
+	BotStateTracker = {
+		IncapacitationCountVariable = {AttributeType.STATE_VALUE, ""},
+		HostageCountVariable = {AttributeType.STATE_VALUE, ""},
+		DeathCountVariable = {AttributeType.STATE_VALUE, ""},
+		FleeCountVariable = {AttributeType.STATE_VALUE, ""},
+		TotalCountVariable = {AttributeType.STATE_VALUE, ""},
+		BotServerTag = {AttributeType.STRING, ""},
+	},
+	CombatSpawner = {
+		ReinforcementPool = {AttributeType.STRING, ""},
+		TimeBetweenSpawns = {AttributeType.EXPRESSION, ""},
+		EnemyWeapons = {AttributeType.STRING, ""},
+		SpawnTags = {AttributeType.STRING, ""},
+		FlowMap = {AttributeType.STRING, ""},
+		SpawnSquads = {AttributeType.BOOL, false},
+		EnemyType = {AttributeType.STRING, ""},
+		AllowDespawn = {AttributeType.BOOL, false},
+		SpawnsBlockedVariable = {AttributeType.STATE_VALUE, ""},
+		Active = {AttributeType.EXPRESSION, ""},
+		SpawnCap = {AttributeType.EXPRESSION, 6},
+		EnemyWeaponsWave1 = {AttributeType.EXPRESSION, nil},
+		EnemyWeaponsWave2 = {AttributeType.EXPRESSION, nil},
+		EnemyWeaponsWave3 = {AttributeType.EXPRESSION, nil},
+		EnemyWeaponsWave4 = {AttributeType.EXPRESSION, nil},
+		EnemyWeaponsWave5 = {AttributeType.EXPRESSION, nil},
+		EnemyWeaponsWave6 = {AttributeType.EXPRESSION, nil},
+		EnemyWeaponsWave7 = {AttributeType.EXPRESSION, nil},
+		EnemyWeaponsWave8 = {AttributeType.EXPRESSION, nil},
+		EnemyWeaponsWave9 = {AttributeType.EXPRESSION, nil},
+	},
+	CombatWaveSpawner = {
+	},
+	ConditionalStateUpdate = {
+		Watch = {AttributeType.EXPRESSION, ""},
+		Condition = {AttributeType.EXPRESSION, ""},
+		InactiveVariable = {AttributeType.STATE_VALUE, ""},
+		ActiveVariable = {AttributeType.STATE_VALUE, ""},
+	},
+	ConversationGenericSocialEngineering = {
+		BotServerTag = {AttributeType.STRING, ""},
+		Visible = {AttributeType.EXPRESSION, ""},
+		SocialEngineeringLevel = {AttributeType.INT, 0},
+		Icon = {AttributeType.STRING, "ChatGeneric"},
+		Text = {AttributeType.STRING, ""},
+		Dialogue = {AttributeType.STRING, ""},
+		SetVariable = {AttributeType.STATE_VALUE, ""},
+		Notification = {AttributeType.STRING, ""},
+		NotificationDelay = {AttributeType.NUMBER, 2.5},
+		Disguise = {AttributeType.STRING, ""},
+	},
+	ConversationResponseCustomBehavior = {
+		BotServerTag = {AttributeType.STATE_VALUE, ""},
+		DisableReason = {AttributeType.EXPRESSION, ""},
+		SocialEngineeringLevel = {AttributeType.INT, 0},
+		Dialogue = {AttributeType.STRING, ""},
+		CustomBehavior = {AttributeType.STRING, ""},
+	},
+	CoverFillSpawner = {
+		CoverSearchLimit = {AttributeType.INT, 5},
+		ActiveVariable = {AttributeType.STATE_VALUE, ""},
+		SpawnsBlockedVariable = {AttributeType.STATE_VALUE, ""},
+		FillFrequency = {AttributeType.NUMBER, 6},
+		ReinforcementPool = {AttributeType.STRING, ""},
+		UnitChanceHeavy = {AttributeType.NUMBER, 0.2},
+		CoverTags = {AttributeType.STRING, ""},
+		SpawnTags = {AttributeType.STRING, ""},
+		Active = {AttributeType.EXPRESSION, "Mission_AlarmRaised"},
+		SpawnCap = {AttributeType.EXPRESSION, "8"},
+	},
+	CustomBehaviorCondition = {
+		Priority = {AttributeType.STRING, "Custom1"},
+		BotServerTag = {AttributeType.STRING, ""},
+		CustomBehavior = {AttributeType.STRING, ""},
+		LoopApply = {AttributeType.BOOL, false},
+		Condition = {AttributeType.EXPRESSION, false},
+	},
+	CustomConversation = {
+	},
+	CustomHack = {
+		DeployCost = {AttributeType.INT, 20},
+		DeployTime = {AttributeType.INT, 10},
+		NodeId = {AttributeType.NETWORK_ID, 1},
+		NameKey = {AttributeType.STRING, ""},
+		SubtitleKey = {AttributeType.STRING, ""},
+		DescriptionKey = {AttributeType.STRING, ""},
+		BlockDeallocation = {AttributeType.BOOL, false},
+		ProgressVariable = {AttributeType.STATE_VALUE, ""},
+		PauseCondition = {AttributeType.EXPRESSION, ""},
+		Priority = {AttributeType.INT, 0},
+		Difficulty = {AttributeType.EXPRESSION, ""},
+		Suspicion = {AttributeType.INT, 1},
+		PrimaryHack = {AttributeType.BOOL, false},
+		Visible = {AttributeType.EXPRESSION, "1"},
+		DeployedVariable = {AttributeType.STATE_VALUE, ""},
+		DeployedOnceVariable = {AttributeType.STATE_VALUE, ""},
+		ScriptedBehavior = {AttributeType.STRING, ""},
+		DisableReason = {AttributeType.EXPRESSION, ""},
+		IconId = {AttributeType.EXPRESSION, 0},
+	},
+	DelayedStateUpdate = {
+		Watch = {AttributeType.EXPRESSION, ""},
+		DelayTime = {AttributeType.EXPRESSION, 5},
+		SetVariable = {AttributeType.STATE_VALUE, ""},
+		OnlyMatch = {AttributeType.BOOL, false},
+	},
+	HackableDoor = {
+		NetworkId = {AttributeType.NETWORK_ID, 1},
+		NetworkLink = {AttributeType.NETWORK_ID_STRING, ""},
+	},
+	HackableElevator = {
+		NetworkId = {AttributeType.NETWORK_ID, 1},
+		NetworkLink = {AttributeType.NETWORK_ID_STRING, ""},
+	},
+	HackingNodeStatus = {
+		NetworkId = {AttributeType.NETWORK_ID, 1},
+		DisabledVariable = {AttributeType.STATE_VALUE, ""},
+		CompromisedVariable = {AttributeType.STATE_VALUE, ""},
+	},
+	HiddenShuffle = {
+		HiddenShuffleId = {AttributeType.STRING, ""},
+		FrontCount = {AttributeType.INT, 0},
+		BackCount = {AttributeType.INT, 0},
+		RevealCount = {AttributeType.INT, 1},
+		RevealCountVariable = {AttributeType.STATE_VALUE, ""},
+		FailCountVariable = {AttributeType.STATE_VALUE, ""},
+		ClientFailCountVariable = {AttributeType.STATE_VALUE, ""},
+		Seed = {AttributeType.INT, 1},
+		RevealAllCondition = {AttributeType.EXPRESSION, ""},
+	},
+	ItemStateTracker = {
+		GroundCountVariable = {AttributeType.STATE_VALUE, ""},
+		TotalHeldCountVariable = {AttributeType.STATE_VALUE, ""},
+		BotHeldCountVariable = {AttributeType.STATE_VALUE, ""},
+		ClientHeldCountVariable = {AttributeType.STATE_VALUE, ""},
+		ItemTag = {AttributeType.STRING, ""},
+	},
+	ItemSwapCondition = {
+		Condition = {AttributeType.EXPRESSION, ""},
+		SwapItemType = {AttributeType.STRING, ""},
+		SwapItemTag = {AttributeType.STRING, ""},
+		TargetItemTag = {AttributeType.STRING, ""},
+	},
+	LerpOperation = {
+		OutputVariable = {AttributeType.STATE_VALUE, ""},
+		Value0 = {AttributeType.EXPRESSION, ""},
+		Value1 = {AttributeType.EXPRESSION, ""},
+		Delta = {AttributeType.EXPRESSION, 0.5},
+		AlwaysUpdate = {AttributeType.EXPRESSION, false},
+		UpdateClock = {AttributeType.EXPRESSION, "0"},
+	},
+	MissionCompletionTrigger = {
+		Condition = {AttributeType.EXPRESSION, ""},
+		Timeout = {AttributeType.NUMBER, 1},
+		CompleteVariable = {AttributeType.STATE_VALUE, ""},
+	},
+	NetworkRouter = {
+	},
+	Notification = {
+		Condition = {AttributeType.EXPRESSION, ""},
+		Notification = {AttributeType.STRING, ""},
+	},
+	RandomBotSpawner = {
+		SpawningActive = {AttributeType.EXPRESSION, ""},
+		SpawnTimeMin = {AttributeType.NUMBER, 4},
+		SpawnTimeMax = {AttributeType.NUMBER, 10},
+		Behavior = {AttributeType.STRING, ""},
+		Class = {AttributeType.STRING, ""},
+		CivilianHighlight = {AttributeType.BOOL, false},
+		DetectionSpeed = {AttributeType.NUMBER, 1},
+		NodesBreak = {AttributeType.STRING, ""},
+		EnforceClass = {AttributeType.STRING, ""},
+		Profile = {AttributeType.STRING, ""},
+		Title = {AttributeType.STRING, ""},
+		Outfit = {AttributeType.STRING, ""},
+		Nodes = {AttributeType.STRING, ""},
+		HostageDifficulty = {AttributeType.NUMBER, 0},
+		ObjectiveHighlight = {AttributeType.BOOL, false},
+		Weapon = {AttributeType.STRING, ""},
+	},
+	ReinforcementPool = {
+		PoolName = {AttributeType.STRING, ""},
+		WaveResetTimeMinimum = {AttributeType.NUMBER, 0},
+		WaveStateVariable = {AttributeType.STATE_VALUE, ""},
+		WaveVariable = {AttributeType.STATE_VALUE, ""},
+		PoolLimit = {AttributeType.EXPRESSION, ""},
+		RemainingVariable = {AttributeType.STATE_VALUE, ""},
+		ActiveVariable = {AttributeType.STATE_VALUE, ""},
+		WaveResetTime = {AttributeType.EXPRESSION, ""},
+		WaveResetTimeDecrease = {AttributeType.NUMBER, 0},
+	},
+	SearchPatternCondition = {
+		Condition = {AttributeType.EXPRESSION, ""},
+		BotServerTag = {AttributeType.STRING, ""},
+	},
+	ServerChat = {
+	},
+	SniperSpawner = {
+		Active = {AttributeType.EXPRESSION, ""},
+		Nodes = {AttributeType.STRING, ""},
+		InitialSpawns = {AttributeType.EXPRESSION, 0},
+		RespawnRate = {AttributeType.EXPRESSION, 20},
+	},
+	StateScript = {
+	},
+	TargetLureHack = {
+	},
+	TimerComponent = {
+		SetVariable = {AttributeType.STATE_VALUE, ""},
+		SetFormattedVariable = {AttributeType.STATE_VALUE, ""},
+		StartValue = {AttributeType.EXPRESSION, 0},
+		TargetValue = {AttributeType.EXPRESSION, 60},
+		Increment = {AttributeType.EXPRESSION, 1},
+		Offset = {AttributeType.EXPRESSION, ""},
+		Enabled = {AttributeType.EXPRESSION, ""},
+	},
+	TrackBotsDown = {
+	},
+	TrackItemHeldServer = {
+	},
+	TrackNodeReserved = {
+	},
+	AutoConversationTrigger = {
+		BotClientTag = {AttributeType.STRING, ""},
+		Active = {AttributeType.EXPRESSION, ""},
+	},
+	BlackoutScreen = {
+	},
+	FileUITrigger = {
+		Trigger = {AttributeType.EXPRESSION, ""},
+		Lines = {AttributeType.STRING, ""},
+	},
+	GameCredits = {
+	},
+	HackingNodeHighlight = {
+	},
+	LocalChat = {
+		DelayStart = {AttributeType.NUMBER, 0},
+		Active = {AttributeType.EXPRESSION, ""},
+		Dialogue = {AttributeType.STRING, ""},
+		TriggerOnce = {AttributeType.BOOL, false},
+		StealthOnly = {AttributeType.BOOL, false},
+	},
+	LocalStateComponents = {
+	},
+	LocalWeaponTracker = {
+	},
+	LocationCard = {
+	},
+	MusicController = {
+		ActivePriority = {AttributeType.EXPRESSION, "1"},
+		TrackId = {AttributeType.EXPRESSION, 0},
+		NoLoop = {AttributeType.BOOL, false},
+		Volume = {AttributeType.NUMBER, 0.5},
+		MusicType = {AttributeType.STRING, Stealth},
+	},
+}]]></ProtectedString>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
+				<Item class="ModuleScript" referent="RBXCB0599362D414F55AB962DBF5175ED4A">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">GlobalAttributes</string>
+						<string name="ScriptGuid">{C82FF03D-384C-4A72-8725-96A2B84E5EC8}</string>
+						<ProtectedString name="Source"><![CDATA[local PropAttributeTypes = require(script.Parent.PropAttributeTypes)
+return { GlobalVariables = { PropAttributeTypes.OPTIONAL_BOOL, nil },
+OnProp = { PropAttributeTypes.OPTIONAL_BOOL, nil },
+ScriptMove = { PropAttributeTypes.OPTIONAL_BOOL, nil },
+Index = { PropAttributeTypes.OPTIONAL_INT, nil },
+CanShatter = { PropAttributeTypes.OPTIONAL_BOOL, nil },
+Tag = { PropAttributeTypes.STRING, nil },
+TagOffset = { PropAttributeTypes.VECTOR3, nil },
+StaticTag = { PropAttributeTypes.STRING, nil },
+HasTopBarrier = { PropAttributeTypes.OPTIONAL_BOOL, nil },
+Indestructible = { PropAttributeTypes.EXPRESSION, nil },
+IsSpawned = { PropAttributeTypes.EXPRESSION, nil },
+Color0 = { PropAttributeTypes.OPTIONAL_MISSION_COLOR, nil },
+Color1 = { PropAttributeTypes.OPTIONAL_MISSION_COLOR, nil },
+Color2 = { PropAttributeTypes.OPTIONAL_MISSION_COLOR, nil },
+Color3 = { PropAttributeTypes.OPTIONAL_MISSION_COLOR, nil },
+Color4 = { PropAttributeTypes.OPTIONAL_MISSION_COLOR, nil },
+Color5 = { PropAttributeTypes.OPTIONAL_MISSION_COLOR, nil },
+Material0 = { PropAttributeTypes.OPTIONAL_MATERIAL, nil },
+Material1 = { PropAttributeTypes.OPTIONAL_MATERIAL, nil },
+Material2 = { PropAttributeTypes.OPTIONAL_MATERIAL, nil },
+Material3 = { PropAttributeTypes.OPTIONAL_MATERIAL, nil },
+Material4 = { PropAttributeTypes.OPTIONAL_MATERIAL, nil },
+Material5 = { PropAttributeTypes.OPTIONAL_MATERIAL, nil },
+Type = { PropAttributeTypes.STRING, nil },
+AltPropModel = { PropAttributeTypes.STRING, nil },
+FadeOutCondition = { PropAttributeTypes.STRING, nil }}]]></ProtectedString>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
+				<Item class="ModuleScript" referent="RBX640386A73561449BB2F5EE4755D844DF">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">PropAttributeTypes</string>
+						<string name="ScriptGuid">{F6823BC2-884C-4658-9542-7A991DD1A476}</string>
+						<ProtectedString name="Source"><![CDATA[local PropAttributeTypes
+
+PropAttributeTypes = {
+	NUMBER = 1,
+	INT = 2,
+	EXPRESSION = 3,
+	STATE_VALUE = 4,
+	STRING = 5,
+	NETWORK_ID = 6,
+	NETWORK_ID_STRING = 7,
+	OPTIONAL_BOOL = 8,
+	OPTIONAL_MISSION_COLOR = 9,
+	OPTIONAL_MATERIAL = 10,
+	VECTOR3 = 11,
+	OPTIONAL_INT = 12,
+	BOOL = 13,
+	CFRAME = 14,
+}
+
+return PropAttributeTypes]]></ProtectedString>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="ModuleScript" referent="RBX05792C5882D84CC5AD731F44B0BA5E98">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">MissingPropsList</string>
+					<string name="ScriptGuid">{A13780BC-4015-49C6-82E2-2B28498EC609}</string>
+					<ProtectedString name="Source"><![CDATA[local AttributeType = require(script.Parent.NotMineThisIsSperosPleaseDontSueMe.PropAttributeTypes)
+
+return {
+	Bot = {
+		AvoidInvestigation 			= { AttributeType.BOOL		, false 	},
+		BodyguardTarget 			= { AttributeType.STRING	, nil 		},
+		Behavior 					= { AttributeType.STRING	, "PatrolWalk" 	},
+		CameraArea 					= { AttributeType.STRING	, nil 		},
+		CharName 					= { AttributeType.STRING	, "Mr. Unlocalized String" },
+		-- CharNameGroup 			= { AttributeType.INT		, 1 		}, Undocumented, dunno what to use for default
+		CivilianHighlight 			= { AttributeType.BOOL		, false 	},
+		Class 						= { AttributeType.STRING	, "Sec" 	},
+		ClientTag 					= { AttributeType.STRING	, nil 		},
+		CustomHairColor 			= { AttributeType.OPTIONAL_MISSION_COLOR, nil },
+		CustomHairStyle				= { AttributeType.STRING	, nil 		},
+		CustomPantsId				= { AttributeType.STRING	, nil 		},
+		CustomShirtId				= { AttributeType.STRING	, nil 		},
+		CustomSkinTone				= { AttributeType.OPTIONAL_MISSION_COLOR, nil },
+		DespawnBlocked				= { AttributeType.STRING	, "0" 		},
+		DespawnCondition			= { AttributeType.STRING	, nil 		},
+		DetectionSpeed				= { AttributeType.NUMBER	, 1   		},
+		EnforceClass				= { AttributeType.STRING	, "Alert1" 	},
+		HeadTracking				= { AttributeType.BOOL		, false 	},
+		HostageDifficulty			= { AttributeType.NUMBER	, 0 		},
+		InterrogationNotification 	= { AttributeType.STRING	, nil 		},
+		InterrogationVariable		= { AttributeType.STRING	, nil 		},
+		Inv							= { AttributeType.STRING	, nil 		},
+		MaxHealth					= { AttributeType.NUMBER	, 100 		},
+		NeverIgnoreConversations	= { AttributeType.BOOL		, false 	},
+		Nodes						= { AttributeType.STRING	, nil 		},
+		NodesBreak					= { AttributeType.STRING	, nil 		},
+		NoHostageDownInCombat		= { AttributeType.BOOL		, false 	},
+		NoInvestigation				= { AttributeType.BOOL		, false 	},
+		ObjectiveHighlight			= { AttributeType.BOOL		, false 	},
+		OnlyHideWhenDead			= { AttributeType.BOOL		, false 	},
+		Outfit						= { AttributeType.STRING	, "BasicSecurity" 	},
+		PatrolCycleLength			= { AttributeType.NUMBER	, 1 		},
+		PowerArea					= { AttributeType.STRING	, nil 		},
+		Profile						= { AttributeType.STRING	, "BasicSecurity" 	},
+		SearchArea					= { AttributeType.STRING	, nil 		},
+		Seed						= { AttributeType.NUMBER	, 4736251 	},
+		ServerTag					= { AttributeType.STRING	, nil 		},
+		SpeakerId					= { AttributeType.STRING	, "Speaker.Unset" 	},
+		Title						= { AttributeType.STRING	, "Name.Unset" 		},
+		Weapon						= { AttributeType.STRING	, "K45" 	},
+	},
+	
+	ConditionalGeometry = {
+		IsSpawned = { AttributeType.EXPRESSION, "1" }
+	},
+	
+	DoorGlass = {
+		CanShatter = { AttributeType.BOOL, true },
+	},
+	
+	DirectionalSpawnV2 = {
+		BlockRange 			= { AttributeType.INT		,  2 	},
+		EnabledCondition 	= { AttributeType.EXPRESSION, "1" 	}
+	},
+	
+	FixedSpawn = {
+		Enabled 		= { AttributeType.EXPRESSION, "1" 	},
+		IgnoreProximity = { AttributeType.BOOL		, false },
+		Range 			= { AttributeType.INT		, 3 	},
+		SpawnTag 		= { AttributeType.STRING	, nil 	}
+	},
+	
+	Glass = {
+		StateValue = { AttributeType.EXPRESSION, nil 	},
+		NoAutoSize = { AttributeType.BOOL	   , false 	}, -- No idea what this actually does, all I know is the templates use it
+	},
+	
+	Link = {
+		Move = 	{ AttributeType.EXPRESSION, "1" },
+		Open = 	{ AttributeType.EXPRESSION, "1" },
+		Path = 	{ AttributeType.EXPRESSION, "1" },
+		Sound = { AttributeType.NUMBER	  ,  1  }
+	},
+
+	StateScript = {
+		Run 			= { AttributeType.STRING, "1" },
+		ScriptSource 	= { AttributeType.STRING, nil },
+		TriggerEvent	= { AttributeType.STRING, nil }
+	}
+}]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="ModuleScript" referent="RBX905CB6030A1A4944B0D94EEF2D91B25E">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">UI</string>
+				<string name="ScriptGuid">{E91F60D1-D0F8-4574-A4B5-D8BC735E9A8E}</string>
+				<ProtectedString name="Source"><![CDATA[local PropArrayUI = {}
 
 PropArrayUI.PADDING4 = UDim.new(0, 4)
 PropArrayUI.PADDING8 = UDim.new(0, 8)
 
-PropArrayUI.ROUNDED8 = Instance.new("UICorner")
-PropArrayUI.ROUNDED8.CornerRadius = PropArrayUI.PADDING4
+PropArrayUI.ROUNDED4 = Instance.new("UICorner")
+PropArrayUI.ROUNDED4.CornerRadius = PropArrayUI.PADDING4
+
+PropArrayUI.VERTICAL_UILIST = Instance.new("UIListLayout")
+PropArrayUI.VERTICAL_UILIST.FillDirection = Enum.FillDirection.Vertical
+PropArrayUI.VERTICAL_UILIST.Padding = PropArrayUI.PADDING8
+PropArrayUI.VERTICAL_UILIST.SortOrder = Enum.SortOrder.LayoutOrder
+
+PropArrayUI.HORIZONTAL_UILIST = PropArrayUI.VERTICAL_UILIST:Clone()
+PropArrayUI.HORIZONTAL_UILIST.FillDirection = Enum.FillDirection.Horizontal
 
 PropArrayUI.VECTOR_COMPONENT_UILAYOUT = Instance.new("UIListLayout")
 PropArrayUI.VECTOR_COMPONENT_UILAYOUT.SortOrder = Enum.SortOrder.Name
@@ -422,7 +2152,6 @@ function PropArrayUI.NewTextBox(placeholderText: string)
 	newTextbox.Font = Enum.Font.SciFi
 	newTextbox.TextScaled = true
 	newTextbox.PlaceholderText = placeholderText
-	newTextbox.
 	return newTextbox
 end
 
@@ -440,10 +2169,9 @@ end
 
 return PropArrayUI
 ]]></ProtectedString>
-					<int64 name="SourceAssetId">-1</int64>
-					<BinaryString name="Tags"></BinaryString>
-				</Properties>
-			</Item>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
 		</Item>
 	</Item>
 </roblox>
