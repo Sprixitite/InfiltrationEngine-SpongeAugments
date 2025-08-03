@@ -5,6 +5,7 @@ Currently consists of three tools:
 1) Cell Fixup - One-press button to fix styling of manually produced cell floors/ceilings, as a bonus also consistently styles Links
 2) Toggle Group Visibility - Non-destructively toggles the visibility of an entire model/folder, a'la blender's collection visibility
 3) [Attribute Importer](#attribute-importer)
+4) Custom Prop Base Generator - Generates the "Base" part required for a custom prop to function, if one already exists then readjusts it to the bounding box of the model
 
 Use at your own risk etc. etc.
 
@@ -27,4 +28,4 @@ Performs the function of both of the prior options at the same time
 ### 4) Delete All Attributes
 Deletes **EVERY** attribute on every item in the selection, regardless of wether each attribute was created via the importer or not
 
-All of the above functions with the exception of the "Delete All Attributes" tool work on `Links`, `Bots`, `ConditionalGeometry`, `Glass`, most `Prop`s, and most `StateComponent`s, the Delete All Attributes tool functions regardless of selection
+All of the above functions with the exception of the "Delete All Attributes" tool work on `Links`, `Bots`, `ConditionalGeometry`, `Glass`, CustomProp `Motor`s, Prop Override `Base` parts, most `Prop`s, and most `StateComponent`s, the Delete All Attributes tool functions regardless of selection
