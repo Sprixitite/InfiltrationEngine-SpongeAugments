@@ -1,7 +1,7 @@
 <roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBX5C8914EF38754D1EAB49C2DCAE299265">
+	<Item class="Folder" referent="RBXC305CF02122D4E4F919D9C02FA4A11A9">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -10,7 +10,7 @@
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 		</Properties>
-		<Item class="Script" referent="RBX2CB85A19FC4B4F19A1F9CF90F63884CF">
+		<Item class="Script" referent="RBX2B75990ACC45445C84F1A240019AF83D">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -20,40 +20,98 @@
 				<string name="Name">Main</string>
 				<token name="RunContext">0</token>
 				<string name="ScriptGuid">{BA25A1CB-E014-4DF4-B49E-AEDDD88D8479}</string>
-				<ProtectedString name="Source"><![CDATA[local spongeZoneToolbar = plugin:CreateToolbar("SpongeZone Tools")
+				<ProtectedString name="Source"><![CDATA[local pluginSingleton = require(script.Parent.PluginSingleton)
+pluginSingleton:_Initialize(plugin)
 
-local allPlugins = {
+local spongeZoneToolbar = plugin:CreateToolbar("InfiltrationEngine // SpongeAugments")
+
+local allTools = {
 	AttributeImporter = script.Parent.AttributeImporter.Main,
 	ToggleGroupVis = script.Parent.ToggleGroupVis.Main,
-	OneClickTools = script.Parent.OneClickTools.Main
+	OneClickTools = script.Parent.OneClickTools.Main,
 }
 
-local function MakePluginMenu(id, text, iconId)
-	return plugin:CreatePluginMenu(`SZT_IE_Menu_{id}`, text, iconId)
+local settingsModule = script.Parent.Settings.Main
+
+local topLevelButtons = {}
+
+local function IconFromInfo(info)
+	if settings().Studio.Theme.Name == "Light" then
+		return info.LightIconAssetID or info.IconAssetID or "rbxassetid://106247740984287"
+	else
+		return info.IconAssetID or info.LightIconAssetID or "rbxassetid://106247740984287"
+	end
 end
 
-local function MakeAction(id, text, tooltip, iconId, allowBinding)
-	allowBinding = allowBinding ~= nil and allowBinding or true
-	return plugin:CreatePluginAction(`SZT_IE_Action_{id}`, text, tooltip, iconId, allowBinding)
-end
-
-for k, v in pairs(allPlugins) do
-	print(`Initializing SpongeZone tool {k}...`)
+local function CreateTopLevelButton(info)
+	local button = spongeZoneToolbar:CreateButton(
+		`SZT_IE_Toolbar_{info.ID}`,
+		info.Tooltip,
+		IconFromInfo(info),
+		info.Text or info.ID
+	)
 	
-	local toolDetails = require(v)
-	local toolButton = spongeZoneToolbar:CreateButton(`SZT_IE_Toolbar_{toolDetails.ID}`, toolDetails.Tooltip, toolDetails.IconAssetID, toolDetails.Text or toolDetails.ID)
-	
-	if toolDetails.BuildMenu ~= nil then
-		toolDetails.BuildMenu(MakePluginMenu, MakeAction)
+	if info.BuildMenu ~= nil then
+		info.BuildMenu()
 	end
 	
-	toolButton.Click:Connect(toolDetails.ClickedCallback)
-end]]></ProtectedString>
+	if info.RethemeMenu ~= nil then
+		settings().Studio.Theme.Changed:Connect(info.RethemeMenu)
+	end
+	
+	button.Click:Connect(info.ClickedCallback)
+	topLevelButtons[info.ID] = { Info = info, Button = button }
+end
+
+local function BuildPluginToolbar(printInits)
+	printInits = printInits or false
+	for k, v in pairs(allTools) do
+		local toolDetails = require(v)
+		
+		if toolDetails.SubActions ~= nil then
+			for subactionName, subaction in pairs(toolDetails.SubActions) do
+				if printInits then print(`Initializing SpongeZone tool {subactionName}...`) end
+				CreateTopLevelButton(subaction)
+			end
+		end
+		
+		if toolDetails.SubActionsOnly then continue end
+		
+		if printInits then print(`Initializing SpongeZone tool {k}...`) end
+		
+		CreateTopLevelButton(toolDetails)
+	end
+	
+	-- Special treatment so it shows up last and has a special init message
+	if printInits then print("Initializing Settings module...") end
+	CreateTopLevelButton(require(settingsModule))
+end
+
+local function WarnIfUnknownTheme()
+	if settings().Studio.Theme.Name ~= "Light" and settings().Studio.Theme.Name ~= "Dark" then
+		warn("Using unknown studio theme, defaulting to dark mode icons.")
+	end
+end
+
+local function RethemeTopLevelButtons()
+	WarnIfUnknownTheme()
+	
+	for id, buttonInfo in pairs(topLevelButtons) do
+		buttonInfo.Button.Icon = IconFromInfo(buttonInfo.Info)
+	end
+	
+	warn("Due to how plugins function (arbitrary roblox limitations) some icons will be broken until studio is restarted!")
+end
+
+BuildPluginToolbar(true)
+WarnIfUnknownTheme()
+
+settings().Studio.ThemeChanged:Connect(RethemeTopLevelButtons)]]></ProtectedString>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
 		</Item>
-		<Item class="ModuleScript" referent="RBX743BEC8595424ADE829AA4901D6F9906">
+		<Item class="ModuleScript" referent="RBX0D5A87802B1C43A1A3A42C0EF694973B">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -150,7 +208,7 @@ return PropArrayUI
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
 		</Item>
-		<Item class="ModuleScript" referent="RBX33EFAF335E814CCFB69C007BA92B1AB9">
+		<Item class="ModuleScript" referent="RBX203B35D78EA549BB8E32976E761C950B">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -158,7 +216,64 @@ return PropArrayUI
 				<Content name="LinkedSource"><null></null></Content>
 				<string name="Name">ToolsCommon</string>
 				<string name="ScriptGuid">{2D5EAC34-8CC9-43F4-B456-D43738C01990}</string>
-				<ProtectedString name="Source"><![CDATA[local ToolsCommon = {}
+				<ProtectedString name="Source"><![CDATA[local pluginSingleton = require(script.Parent.PluginSingleton)
+
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
+local SelectionService = game:GetService("Selection")
+
+local pluginMenus = {}
+
+local ToolsCommon = {}
+
+local function RethemePluginElements()
+	for _, menuInfo in pairs(pluginMenus) do
+		menuInfo.Menu.Icon = ToolsCommon:SelectIcon(menuInfo.Icons.Dark, menuInfo.Icons.Light)
+	end
+end
+
+function ToolsCommon:SelectIcon(dark, light)
+	if self:CurrentStudioTheme() == "Light" then
+		return light or dark or "rbxassetid://106247740984287"
+	else
+		return dark or light or "rbxassetid://106247740984287"
+	end
+end
+
+function ToolsCommon:CurrentStudioTheme() return settings().Studio.Theme.Name end
+
+function ToolsCommon:CreatePluginMenu(id, text, darkIconId, lightIconId)
+	local menu = pluginSingleton:CreatePluginMenu(`SZT_IE_Menu_{id}`, text, self:SelectIcon(darkIconId, lightIconId))
+	pluginMenus[id] = { Menu = menu, Icons = { Dark = darkIconId, Light = lightIconId } }
+	return menu
+end
+
+function ToolsCommon:CreatePluginAction(id, text, tooltip, darkIconId, lightIconId, allowBinding)
+	allowBinding = allowBinding ~= nil and allowBinding or true
+	local action = pluginSingleton:CreatePluginAction(`SZT_IE_Action_{id}`, text, tooltip, ToolsCommon:SelectIcon(darkIconId, lightIconId), allowBinding)
+	return action
+end
+
+function ToolsCommon:GetPluginSetting(settingKey)
+	return pluginSingleton:GetSetting(`SZT_IE_{settingKey}`)
+end
+
+function ToolsCommon:SetPluginSetting(settingKey, value)
+	pluginSingleton:SetSetting(`SZT_IE_{settingKey}`, value)
+	return self:GetPluginSetting(settingKey) == value
+end
+
+function ToolsCommon:RecordChanges(name: string)
+	local recording = ChangeHistoryService:TryBeginRecording(name)
+	if recording == nil then warn("Failed to initialize history recording, doing nothing") return end
+	return recording
+end
+
+function ToolsCommon:CommitChanges(recording: string, enum: Enum.FinishRecordingOperation?)
+	if enum == nil then enum = Enum.FinishRecordingOperation.Commit end
+	ChangeHistoryService:FinishRecording(recording, enum)
+end
+
+function ToolsCommon:GetSelection() return SelectionService:Get() end
 
 function ToolsCommon:LevelFolder()
 	return workspace:FindFirstChild("DebugMission") or workspace:FindFirstChild("Level")
@@ -214,12 +329,50 @@ function ToolsCommon:TableSlice(tblSrc: {any}, sliceStart: number, sliceEnd: num
 	return tblTo
 end
 
+settings().Studio.ThemeChanged:Connect(RethemePluginElements)
+
 return ToolsCommon]]></ProtectedString>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
 		</Item>
-		<Item class="Folder" referent="RBX52F97A9F58CB4254997A926C46D90B7A">
+		<Item class="ModuleScript" referent="RBX82A4DE0D993D42718B92562E63398B10">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">PluginSingleton</string>
+				<string name="ScriptGuid">{0B52CE3C-5989-42D0-AC59-A04E1E3A6836}</string>
+				<ProtectedString name="Source"><![CDATA[local PluginSingleton = {}
+
+local _plugin = nil
+function PluginSingleton:_Initialize(singleton)
+	_plugin = singleton
+end
+
+function PluginSingleton:CreatePluginMenu(id, text, iconId)
+	return _plugin:CreatePluginMenu(id, text, iconId)
+end
+
+function PluginSingleton:CreatePluginAction(id, text, tooltip, iconId, allowBinding)
+	return _plugin:CreatePluginAction(id, text, tooltip, iconId, allowBinding)
+end
+
+function PluginSingleton:GetSetting(settingKey)
+	return _plugin:GetSetting(settingKey)
+end
+
+function PluginSingleton:SetSetting(settingKey, value)
+	_plugin:SetSetting(settingKey, value)
+end
+
+return PluginSingleton]]></ProtectedString>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+		</Item>
+		<Item class="Folder" referent="RBXA001D99A37B64887A5971A324B9543E8">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -228,7 +381,7 @@ return ToolsCommon]]></ProtectedString>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBX44372562098A453080CE5C2C264607F5">
+			<Item class="ModuleScript" referent="RBX2427F7D630BA41C8BFD78D0140952232">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -236,8 +389,7 @@ return ToolsCommon]]></ProtectedString>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">Main</string>
 					<string name="ScriptGuid">{7B825C44-7342-4A3D-9FBE-7FC60ED35674}</string>
-					<ProtectedString name="Source"><![CDATA[local ChangeHistoryService = game:GetService("ChangeHistoryService")
-local SelectionService = game:GetService("Selection")
+					<ProtectedString name="Source"><![CDATA[local common = require(script.Parent.Parent.ToolsCommon)
 
 local GROUP_VIS_ATTR_NAME = "_SpongeGroupVisibility"
 local ELMNT_VIS_ATTR_NAME = "_SpongeElmntVisibility"
@@ -329,7 +481,7 @@ local function ToggleGroupVisibility(group: Instance, invert: boolean)
 end
 
 local function GroupVisTogglePressed()
-	local selection = SelectionService:Get()
+	local selection = common:GetSelection()
 
 	local selectionIsValid = true
 	for instName, inst in pairs(selection) do
@@ -342,14 +494,14 @@ local function GroupVisTogglePressed()
 
 	if not selectionIsValid then return end
 
-	local recording = ChangeHistoryService:TryBeginRecording("Toggle Group Visibility")
-	if not recording then warn("Failed to initialize history recording, doing nothing") return end
+	local recording = common:RecordChanges("Toggle Group Visibility")
+	if not recording then return end
 
 	for _, inst in pairs(selection) do
 		ToggleGroupVisibility(inst, true)
 	end
 
-	ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
+	common:CommitChanges(recording)
 
 end
 
@@ -357,14 +509,15 @@ return {
 	ClickedCallback = GroupVisTogglePressed,
 	ID = "Toggle Group Visibility", 
 	Tooltip = "Toggle the visibility of a folder/model", 
-	IconAssetID = "rbxassetid://86288177650040"
+	IconAssetID = "rbxassetid://86288177650040",
+	LightIconAssetID = "rbxassetid://137463386400446"
 }]]></ProtectedString>
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBXCB7DD0406E9A414D80F72D39E0C82D2E">
+		<Item class="Folder" referent="RBX4EBB073CC8EE48299FAE59B4A0D31E8D">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -373,7 +526,7 @@ return {
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBX44901196FCE244189AD62BA60DF9D821">
+			<Item class="ModuleScript" referent="RBX727624F96EB6459DA2901073067A7AC1">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -425,7 +578,7 @@ return {
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBXB91EA91497F543F1BB4678DDDEA06E92">
+		<Item class="Folder" referent="RBX7082ACDA0F6C4001B3D18699F0B6C16F">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -434,7 +587,7 @@ return {
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBX0A56721A1E1B4201A58599A089D2FBA4">
+			<Item class="ModuleScript" referent="RBXA3B57CB95E5B45959BA383E110635894">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -442,10 +595,7 @@ return {
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">Main</string>
 					<string name="ScriptGuid">{EF17C8F4-4127-4D1F-890C-286169E6F9E2}</string>
-					<ProtectedString name="Source"><![CDATA[local selectionService = game:GetService("Selection")
-local changeHistoryService = game:GetService("ChangeHistoryService")
-
-local common = require(script.Parent.Parent.ToolsCommon)
+					<ProtectedString name="Source"><![CDATA[local common = require(script.Parent.Parent.ToolsCommon)
 local attributeMan = require(script.Parent.AttributeMan)
 local cinfoHandler = require(script.Parent.InfilClassInfo)
 
@@ -453,7 +603,7 @@ local function ImportAttributesForSelection(includePrivate, includeGlobal, delet
 	local debugMission = common:LevelFolder()
 	if debugMission == nil then warn("Couldn't find mission folder! Doing nothing") return end
 	
-	local selection = selectionService:Get()
+	local selection = common:GetSelection()
 	local validSelection = nil
 	if includePrivate and not includeGlobal and not deleting then
 		validSelection = {}
@@ -480,8 +630,8 @@ local function ImportAttributesForSelection(includePrivate, includeGlobal, delet
 		end
 	end
 	
-	local recording = changeHistoryService:TryBeginRecording("Import Attributes For Selection")
-	if not recording then warn("Failed to initialize history recording, doing nothing") return end
+	local recording = common:RecordChanges("Import Attributes For Selection")
+	if not recording then return end
 	
 	-- Use pcall if sprix isn't in the session
 	-- Just in case :3
@@ -516,7 +666,7 @@ local function ImportAttributesForSelection(includePrivate, includeGlobal, delet
 		end
 	end)
 	
-	changeHistoryService:FinishRecording(recording, success and Enum.FinishRecordingOperation.Commit or Enum.FinishRecordingOperation.Cancel)
+	common:CommitChanges(recording, success and Enum.FinishRecordingOperation.Commit or Enum.FinishRecordingOperation.Cancel)
 	
 end
 
@@ -537,62 +687,67 @@ local function DeleteImported()
 end
 
 local function DeleteAll()
-	local recording = changeHistoryService:TryBeginRecording("Import Attributes For Selection")
-	if not recording then warn("Failed to initialize history recording, doing nothing") return end
+	local recording = common:RecordChanges("Import Attributes For Selection")
+	if not recording then return end
 	
-	for _, v in pairs(selectionService:Get()) do
+	for _, v in pairs(common:GetSelection()) do
 		for attrName, _ in pairs(v:GetAttributes()) do
 			v:SetAttribute(attrName, nil)
 		end
 	end
 	
-	changeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
+	common:CommitChanges(recording)
 end
 
 local pluginMenu: PluginMenu? = nil
 
-local function BuildMenu(newPluginMenu, newAction)
-	local nonGlobalImport = newAction(
+local function BuildMenu()
+	local nonGlobalImport = common:CreatePluginAction(
 		"AttributeImportNonGlobal", 
 		"Import Non-Global Attributes",
 		"Import all attributes specific to this Prop/StateComponent",
-		"rbxassetid://73551897964793"
+		"rbxassetid://73551897964793",
+		"rbxassetid://132743443219803"
 	)
 	nonGlobalImport.Triggered:Connect(NonGlobalImport)
 	
-	local globalImport = newAction(
+	local globalImport = common:CreatePluginAction(
 		"AttributeImportGlobal", 
 		"Import Global Attributes",
 		"Import all attributes which aren't specific to a given Prop/StateComponent",
-		"rbxassetid://109357542849581"
+		"rbxassetid://109357542849581",
+		"rbxassetid://133715331552259"
 	)
 	globalImport.Triggered:Connect(GlobalImport)
 	
-	local allImport = newAction(
+	local allImport = common:CreatePluginAction(
 		"AttributeImportAll", 
 		"Import All Attributes",
 		"Import all global and relevant non-global attributes to this Prop/StateComponent",
-		"rbxassetid://88889481728921"
+		"rbxassetid://88889481728921",
+		"rbxassetid://81720630505836"
 	)
 	allImport.Triggered:Connect(AllImport)
 	
-	local deleteImported = newAction(
+	local deleteImported = common:CreatePluginAction(
 		"AttributeImportDelete",
 		"Delete All Imported Attributes",
 		"Delete all imported attributes from this Prop/StateComponent",
-		"rbxassetid://120558084860550"
+		"rbxassetid://120558084860550",
+		"rbxassetid://94057149931568"
 	)
 	deleteImported.Triggered:Connect(DeleteImported)
 	
-	local deleteAll = newAction(
+	local deleteAll = common:CreatePluginAction(
 		"AttributeImportDeleteAll",
 		"Delete All Attributes",
 		"Delete all attributes from this Instance",
-		"rbxassetid://120558084860550"
+		"rbxassetid://120558084860550",
+		"rbxassetid://94057149931568"
 	)
 	deleteAll.Triggered:Connect(DeleteAll)
 	
-	pluginMenu = newPluginMenu("AttributeImporter", "Import Attributes", "rbxassetid://88889481728921")
+	pluginMenu = common:CreatePluginMenu("AttributeImporter", "Import Attributes", "rbxassetid://88889481728921", "rbxassetid://81720630505836")
 	pluginMenu:AddAction(nonGlobalImport)
 	pluginMenu:AddAction(globalImport)
 	pluginMenu:AddAction(allImport)
@@ -608,6 +763,7 @@ return {
 	ID = "Attribute Importer",
 	Tooltip = "Automatically import all supported attributes to a prop",
 	IconAssetID = "rbxassetid://88889481728921",
+	LightIconAssetID = "rbxassetid://81720630505836",
 	ClickedCallback = OpenWindow,
 	BuildMenu = BuildMenu
 }]]></ProtectedString>
@@ -615,7 +771,7 @@ return {
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXE5CEC3A6AD6C44C688724E04D30E0959">
+			<Item class="ModuleScript" referent="RBX48D7447C149C4E2AABC23A8CA9A1B0D7">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -726,7 +882,7 @@ return {
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBX6863DBBE07D04811A1D64AE45E46537D">
+			<Item class="ModuleScript" referent="RBX50DB0366F0EA46E8BCB7EA1D226159BD">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -829,7 +985,7 @@ return InfilClassInfo]]></ProtectedString>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXEB9A801A011E46A3BE2EECE1AB3FCCDA">
+			<Item class="ModuleScript" referent="RBX15E4618F74EE422B9B7AC33F6853134E">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -913,7 +1069,7 @@ return classSearchInfo]]></ProtectedString>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXDB995AEE734241F985815427A6B94BD4">
+			<Item class="ModuleScript" referent="RBX18E6A3883B454325ABD1407FF6C5F21D">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -969,7 +1125,7 @@ return AttributeMan
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="Folder" referent="RBXFEC5B7BBA2D44EFE850835B0376658A8">
+			<Item class="Folder" referent="RBXA5F026C48B0840609DC820B08B97CE0E">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -978,7 +1134,7 @@ return AttributeMan
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
-				<Item class="ModuleScript" referent="RBXD9C1A20602B745D4880713C4D3B25C37">
+				<Item class="ModuleScript" referent="RBX80ADFEA1691E4769B29B9699D95BB557">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2216,7 +2372,7 @@ return {
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
-				<Item class="ModuleScript" referent="RBX3B2F8740106C406E83127B1CC848F88C">
+				<Item class="ModuleScript" referent="RBXEC9003885DC147839FC92E03E7F64821">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2255,7 +2411,7 @@ FadeOutCondition = { PropAttributeTypes.STRING, nil }}]]></ProtectedString>
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
-				<Item class="ModuleScript" referent="RBXF4A70A89D6A2455BA5DE8447AF253A9A">
+				<Item class="ModuleScript" referent="RBX06FBD13395454C59A5D5A18D10189B7A">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2289,7 +2445,7 @@ return PropAttributeTypes]]></ProtectedString>
 				</Item>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBX8C055DD62A53458397F5E701E988B06F">
+		<Item class="Folder" referent="RBX5ABAABCA86F241A18FB3441FE2CE710F">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2298,7 +2454,7 @@ return PropAttributeTypes]]></ProtectedString>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBXF6BC7C6363064AF28EC0A19D0BCA93ED">
+			<Item class="ModuleScript" referent="RBXBECED4D7520B4504A9FB19F4E45182D4">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2306,23 +2462,36 @@ return PropAttributeTypes]]></ProtectedString>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">Main</string>
 					<string name="ScriptGuid">{311C54E9-667F-47AD-8660-BEFB18238E0C}</string>
-					<ProtectedString name="Source"><![CDATA[local module = {}
+					<ProtectedString name="Source"><![CDATA[local common = require(script.Parent.Parent.ToolsCommon)
+local pluginSettingsKeys = require(script.Parent.Parent.Settings.SettingsKeys)
+
+local oneClickMenuEnabled = common:GetPluginSetting(pluginSettingsKeys.ONE_CLICK_ENABLED)
+if oneClickMenuEnabled == nil then oneClickMenuEnabled = true end
+
+local oneClickMenuDisabled = not oneClickMenuEnabled
 
 local toolsList = {
 	CellFixup = script.Parent.CellFixup.Main,
 	CustomPropBaseGen = script.Parent.CustomPropBaseGen.Main,
+	GenSlopePart = script.Parent.GenSlopePart.Main,
+	ReorganizeContents = script.Parent.ReorganizeContents.Main
 }
+
+local subActions = {}
+for k, tool in pairs(toolsList) do
+	subActions[k] = require(tool)
+end
 
 local oneClickMenu: PluginMenu? = nil
 
-local function BuildMenu(newPluginMenu, newAction)
-	oneClickMenu = newPluginMenu("OneClickTools", "One-Click Tools", "rbxassetid://106247740984287")
+local function BuildMenu()
+	oneClickMenu = common:CreatePluginMenu("OneClickTools", "One-Click Tools", "rbxassetid://125187645185104", "rbxassetid://80115599628137")
 	
 	for toolName, toolModule in pairs(toolsList) do
 		print(`\tInitializing {toolName}...`)
 		
 		local actionInfo = require(toolModule)
-		local toolAction = newAction(`OCT_{actionInfo.ID}`, actionInfo.ID, actionInfo.Tooltip, actionInfo.IconAssetID)
+		local toolAction = common:CreatePluginAction(`OCT_{actionInfo.ID}`, actionInfo.ID, actionInfo.Tooltip, actionInfo.IconAssetID, actionInfo.LightIconAssetID)
 		
 		toolAction.Triggered:Connect(actionInfo.ClickedCallback)
 		oneClickMenu:AddAction(toolAction)
@@ -2333,10 +2502,17 @@ local function OpenWindow()
 	oneClickMenu:ShowAsync()
 end
 
+if not oneClickMenuDisabled then subActions = nil end
+
 return {
+	SubActionsOnly = oneClickMenuDisabled,
+	SubActions = subActions,
+	
 	ID = "One-Click Tools",
 	Tooltip = "A collection of tools activated by a single click.\nExists to avoid cluttering your plugin bar :3",
 	IconAssetID = "rbxassetid://125187645185104",
+	LightIconAssetID = "rbxassetid://80115599628137",
+	
 	ClickedCallback = OpenWindow,
 	BuildMenu = BuildMenu
 }]]></ProtectedString>
@@ -2344,7 +2520,7 @@ return {
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="Folder" referent="RBX7CEF4C19413A47DDA43A16E6F5399933">
+			<Item class="Folder" referent="RBX328C2B9C53E74CB88F6E615E57A86D0F">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2353,7 +2529,7 @@ return {
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
-				<Item class="ModuleScript" referent="RBXF884F95654AB44D88E39437F7A104DDD">
+				<Item class="ModuleScript" referent="RBX7B4098EC6343452491159D8792D2CE94">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2361,8 +2537,7 @@ return {
 						<Content name="LinkedSource"><null></null></Content>
 						<string name="Name">Main</string>
 						<string name="ScriptGuid">{F691E76A-0216-4C85-BF84-519152CBD9F2}</string>
-						<ProtectedString name="Source"><![CDATA[local ChangeHistoryService = game:GetService("ChangeHistoryService")
-local common = require(script.Parent.Parent.Parent.ToolsCommon)
+						<ProtectedString name="Source"><![CDATA[local common = require(script.Parent.Parent.Parent.ToolsCommon)
 
 -- Hash politely borrowed from the official Cell tools
 local function hashName(name)
@@ -2430,8 +2605,10 @@ local function CellFixup()
 	local missionFolder = common:LevelFolder()
 	if missionFolder == nil then warn("Failed to find Custom Mission folder!") return end
 	
-	local recording = ChangeHistoryService:TryBeginRecording("Cell Fixup")
-	if not recording then warn("Failed to initialize history recording, doing nothing") return end
+	if missionFolder:FindFirstChild("Cells") == nil then warn("Custom Mission folder does not contain Cells folder!") return end
+	
+	local recording = common:RecordChanges("Cell Fixup")
+	if not recording then return end
 	
 	for _, cell in next, missionFolder.Cells:GetChildren() do
 		local cellColour = hashName(cell.Name)
@@ -2448,21 +2625,22 @@ local function CellFixup()
 		end
 	end
 	
-	ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
+	common:CommitChanges(recording)
 end
 
 return {
 	ClickedCallback = CellFixup,
 	ID = "Cell Fixup",
 	Tooltip = "Fix cell styling",
-	IconAssetID = "rbxassetid://115706109343056"
+	IconAssetID = "rbxassetid://115706109343056",
+	LightIconAssetID = "rbxassetid://95343720267369"
 }]]></ProtectedString>
 						<int64 name="SourceAssetId">-1</int64>
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
 			</Item>
-			<Item class="Folder" referent="RBXC6DFD4D73D5C458AA9691374B5ED5B1F">
+			<Item class="Folder" referent="RBX30E275FA5EAC40F185EE58A905B5EC27">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2471,7 +2649,7 @@ return {
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
-				<Item class="ModuleScript" referent="RBXAEE4D509F8DC4DB7A4CA2184CBB1FAA6">
+				<Item class="ModuleScript" referent="RBX9B42F94F74724A78B3B5E82699752B22">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2479,17 +2657,14 @@ return {
 						<Content name="LinkedSource"><null></null></Content>
 						<string name="Name">Main</string>
 						<string name="ScriptGuid">{CAAC927D-AFB9-44EF-A1CF-2D4715B27B47}</string>
-						<ProtectedString name="Source"><![CDATA[local ChangeHistoryService = game:GetService("ChangeHistoryService")
-local selection = game:GetService("Selection")
-
-local common = require(script.Parent.Parent.Parent.ToolsCommon)
+						<ProtectedString name="Source"><![CDATA[local common = require(script.Parent.Parent.Parent.ToolsCommon)
 
 local function BaseGen()
 	
-	local recording = ChangeHistoryService:TryBeginRecording("Generate Prop Base")
-	if not recording then warn("Failed to initialize history recording, doing nothing") return end
+	local recording = common:RecordChanges("Generate Prop Base")
+	if not recording then return end
 	
-	for _, v in pairs(selection:Get()) do
+	for _, v in pairs(common:GetSelection()) do
 		if not v:IsA("Model") then warn(`Selection {v.Parent.Name}.{v.Name} is not a Model! Skipping`) continue end
 		
 		local basePart = common:FindFirstChildWithNameAndClass(v, "Base", "BasePart") 
@@ -2510,7 +2685,7 @@ local function BaseGen()
 		basePart.Anchored = true
 	end
 	
-	ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
+	common:CommitChanges(recording)
 	
 end
 
@@ -2518,12 +2693,251 @@ return {
 	ClickedCallback = BaseGen,
 	ID = "Generate Prop Base",
 	Tooltip = "Generate the 'Base' part for the selected custom prop",
-	IconAssetID = "rbxassetid://73246176602542"
+	IconAssetID = "rbxassetid://73246176602542",
+	LightIconAssetID = "rbxassetid://101352653431755"
 }]]></ProtectedString>
 						<int64 name="SourceAssetId">-1</int64>
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
+			</Item>
+			<Item class="Folder" referent="RBXB51AD8DB4FAB47EB980534C99A30A4C7">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<string name="Name">ReorganizeContents</string>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+				<Item class="ModuleScript" referent="RBX14E9294C0A09488C87A061C4F2853ADF">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">Main</string>
+						<string name="ScriptGuid">{E18944E5-E01A-4129-9F65-BB85E1F4FC50}</string>
+						<ProtectedString name="Source"><![CDATA[local common = require(script.Parent.Parent.Parent.ToolsCommon)
+
+local function FakeChild(fakeParent, name)
+	local fake = fakeParent:FindFirstChild(name)
+	if fake ~= nil then return fake end
+	
+	fake = Instance.new("Folder")
+	fake.Parent = fakeParent
+	fake.Name = name
+	return fake
+end
+
+local function ReorganizeContents()
+	
+	local recording = common:RecordChanges("Generate Prop Base #1")
+	if not recording then return end
+	
+	local fakeParent = Instance.new("Part")
+	fakeParent.Parent = workspace
+	
+	for _, parent in ipairs(common:GetSelection()) do
+		local vChildren = parent:GetChildren()
+		table.sort(vChildren, function(c1, c2) return c1.Name:lower() < c2.Name:lower() end)
+		
+		for _, child in ipairs(vChildren) do
+			print(child.Name)
+			child.Parent = FakeChild(fakeParent, child.Name)
+		end
+		
+		for _, nameFolder in ipairs(fakeParent:GetChildren()) do
+			for _, child in ipairs(nameFolder:GetChildren()) do
+				local newChild = child:Clone()
+				newChild.Parent = parent
+			end
+		end
+		
+	end
+	
+	fakeParent:Destroy()
+	
+	common:CommitChanges(recording)
+	
+end
+
+return {
+	ClickedCallback = ReorganizeContents,
+	ID = "Child Organizer",
+	Tooltip = "For each selected instance, reorganizes it's children to be listed in alphabetical order",
+	IconAssetID = "rbxassetid://73267947291883",
+	LightIconAssetID = "rbxassetid://96120579208421"
+}]]></ProtectedString>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
+			</Item>
+			<Item class="Folder" referent="RBXA80DCEF2C070494F812B3CE4DA50D80B">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<string name="Name">GenSlopePart</string>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+				<Item class="ModuleScript" referent="RBXCF81FB604722457BA56CF9781E69DFFE">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">Main</string>
+						<string name="ScriptGuid">{EF142B23-FAE6-4E74-AA7B-0F241E14C468}</string>
+						<ProtectedString name="Source"><![CDATA[local common = require(script.Parent.Parent.Parent.ToolsCommon)
+
+local function InstanceIsWedge(instance: Instance)
+	return instance:IsA("WedgePart") or instance:IsA("Part") and instance.Shape == Enum.PartType.Wedge
+end
+
+local function GenSlopePart(wedge: BasePart)
+	
+	local slopePart = Instance.new("Part")
+	slopePart.Parent = wedge.Parent
+	slopePart.CFrame = wedge.CFrame
+	slopePart.Material = wedge.Material
+	slopePart.CanCollide = wedge.CanCollide
+	slopePart.CanQuery = wedge.CanQuery
+	slopePart.CanTouch = wedge.CanTouch
+	slopePart.CastShadow = wedge.CastShadow
+	
+	slopePart.Size = Vector3.new( wedge.Size.X, 0.5, math.sqrt(wedge.Size.Y^2 + wedge.Size.Z^2) )
+	
+	slopePart.CFrame = slopePart.CFrame * CFrame.Angles(math.atan2(wedge.Size.Y, wedge.Size.Z), 0, 0):Inverse()
+	
+end
+
+local function GenSlopeParts()
+	
+	local recording = common:RecordChanges("Generate Slope Part(s)")
+	if not recording then return end
+	
+	for _, selected in ipairs(common:GetSelection()) do
+		if not InstanceIsWedge(selected) then warn(`Selection {selected.Name} isn't a Wedge! Skipping`) continue end
+		GenSlopePart(selected)
+	end
+	
+	common:CommitChanges(recording)
+	
+end
+
+return {
+	ClickedCallback = GenSlopeParts,
+	ID = "Generate Slope Part",
+	Tooltip = "For each selected wedge, generates a part at the center of it's slope facing the normal vector of the slope.",
+	IconAssetID = "rbxassetid://73761969919675",
+	LightIconAssetID = "rbxassetid://80151075507740"
+}]]></ProtectedString>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
+			</Item>
+		</Item>
+		<Item class="Folder" referent="RBX02C2455154C149278D17B86240C42917">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Settings</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+			<Item class="ModuleScript" referent="RBX739F3862065C4B90B032A70D410CFE2B">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">Main</string>
+					<string name="ScriptGuid">{35A50E7E-2F47-4C7C-868B-9332127FA6DE}</string>
+					<ProtectedString name="Source"><![CDATA[local common = require(script.Parent.Parent.ToolsCommon)
+
+local settingsKeys = require(script.Parent.SettingsKeys)
+
+local settingsMenu: PluginMenu = nil
+local oneClickEnableAction: PluginAction = nil
+local oneClickDisableAction: PluginAction = nil
+
+local function UpdateMenu()
+	settingsMenu:Clear()
+	if common:GetPluginSetting(settingsKeys.ONE_CLICK_ENABLED) ~= false then
+		settingsMenu:AddAction(oneClickDisableAction)
+	else
+		settingsMenu:AddAction(oneClickEnableAction)
+	end
+end
+
+local function ToggleOneClickEnabled()
+	local currentState = common:GetPluginSetting(settingsKeys.ONE_CLICK_ENABLED)
+	if currentState == nil then currentState = true end
+	common:SetPluginSetting( settingsKeys.ONE_CLICK_ENABLED, not currentState )
+	UpdateMenu()
+	warn("Restart to apply setting (trust me I tried getting this to work without a restart)")
+end
+
+local function BuildMenu()
+	oneClickEnableAction = common:CreatePluginAction(
+		"OneClickEnable",
+		"Enable One-Click Menu",
+		"Toggles usage of the one-click menu for saving toolbar space.",
+		"rbxassetid://125187645185104",
+		"rbxassetid://80115599628137",
+		false
+	)
+	oneClickEnableAction.Triggered:Connect(ToggleOneClickEnabled)
+	
+	oneClickDisableAction = common:CreatePluginAction(
+		"OneClickDisable",
+		"Disable One-Click Menu",
+		"Toggles usage of the one-click menu for saving toolbar space.",
+		"rbxassetid://125187645185104",
+		"rbxassetid://80115599628137",
+		false
+	)
+	oneClickDisableAction.Triggered:Connect(ToggleOneClickEnabled)
+	
+	settingsMenu = common:CreatePluginMenu("Settings", "Settings", "rbxassetid://87024861341187", "rbxassetid://127048252171392")
+	UpdateMenu()
+end
+
+local function OpenWindow()
+	settingsMenu:ShowAsync()
+end
+
+return {
+	ID = "Settings",
+	Tooltip = "Settings for SpongeAugments",
+	IconAssetID = "rbxassetid://87024861341187",
+	LightIconAssetID = "rbxassetid://127048252171392",
+	ClickedCallback = OpenWindow,
+	BuildMenu = BuildMenu
+}]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBXB7086D8A7C4949B9957365C4279571D1">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">SettingsKeys</string>
+					<string name="ScriptGuid">{4948C85F-7E17-4FC5-9058-4D864150BA5C}</string>
+					<ProtectedString name="Source"><![CDATA[return {
+	ONE_CLICK_ENABLED = "OneClickEnabled"
+}]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
 			</Item>
 		</Item>
 	</Item>
